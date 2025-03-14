@@ -10,11 +10,16 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
+    "agora-access-token": "^2.0.4",
+    "agora-rtc-sdk-ng": "^4.23.2",
     "bcryptjs": "^3.0.2",
     "cookie": "^1.0.2",
+    "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.14.2",
+    "mongoose": "^8.12.1",
     "next": "15.2.2",
+    "npm": "^11.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
