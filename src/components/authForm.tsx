@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 interface AuthFormProps {
   variant: 'login' | 'signup'
@@ -13,17 +15,44 @@ export default function AuthForm({ variant }: AuthFormProps) {
     : "Already have an account?"
   const alternativeLink = isLogin ? '/signup' : '/login'
   const alternativeLinkText = isLogin ? 'Sign Up' : 'Login'
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
-  async function handleSubmit(formData: FormData) {
-    'use server'
-    // Add your authentication logic here
-    console.log(Object.fromEntries(formData))
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const data = Object.fromEntries(formData.entries())
+
+    try {
+      const response = await fetch(isLogin ? '/api/auth/login' : '/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Something went wrong')
+      }
+
+      if (isLogin) {
+        router.push('/profile')
+      } else {
+        router.push('/login')
+      }
+    } catch (error: any) {
+      setError(error.message)
+    }
   }
 
   return (
     <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-red-50">
       <h2 className="text-3xl font-bold mb-8 text-center text-red-600">{title}</h2>
-      <form className="space-y-6" action={handleSubmit}>
+      {error && <p className="text-red-600 text-center mb-4">{error}</p>}
+      <form className="space-y-6" onSubmit={handleSubmit}>
         {!isLogin && (
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-red-800">
