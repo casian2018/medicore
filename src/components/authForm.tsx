@@ -8,7 +8,7 @@ interface AuthFormProps {
 
 export default function AuthForm({ variant }: AuthFormProps) {
   const isLogin = variant === 'login'
-  const title = isLogin ? 'Login to Medicore' : 'Create an Account'
+  const title = isLogin ? 'Login' : 'Create an Account'
   const actionText = isLogin ? 'Login' : 'Sign Up'
   const alternativeText = isLogin 
     ? "Don't have an account?" 
@@ -50,12 +50,12 @@ export default function AuthForm({ variant }: AuthFormProps) {
 
   return (
     <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-red-50">
-      <h2 className="text-3xl font-bold mb-8 text-center text-red-600">{title}</h2>
-      {error && <p className="text-red-600 text-center mb-4">{error}</p>}
+      <h2 className="text-3xl font-bold mb-8 text-center text-black">{title}</h2>
+      {error && <p className="text-black text-center mb-4">{error}</p>}
       <form className="space-y-6" onSubmit={handleSubmit}>
         {!isLogin && (
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-red-800">
+            <label htmlFor="name" className="block text-sm font-medium text-black">
               Name
             </label>
             <input
@@ -69,7 +69,7 @@ export default function AuthForm({ variant }: AuthFormProps) {
         )}
         
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-red-800">
+          <label htmlFor="email" className="block text-sm font-medium text-black">
             Email
           </label>
           <input
@@ -83,7 +83,7 @@ export default function AuthForm({ variant }: AuthFormProps) {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-red-800">
+          <label htmlFor="password" className="block text-sm font-medium text-black">
             Password
           </label>
           <input
@@ -97,18 +97,54 @@ export default function AuthForm({ variant }: AuthFormProps) {
         </div>
 
         {!isLogin && (
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-red-800">
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              required
-              className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
-            />
-          </div>
+          <>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-black">
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">
+                Account Type
+              </label>
+              <div className="flex gap-4">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="patient"
+                    name="accountType"
+                    value="patient"
+                    required
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-red-200"
+                  />
+                  <label htmlFor="patient" className="ml-2 text-black">
+                    Patient
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="doctor"
+                    name="accountType"
+                    value="doctor"
+                    required
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-red-200"
+                  />
+                  <label htmlFor="doctor" className="ml-2 text-black">
+                    Doctor
+                  </label>
+                </div>
+              </div>
+            </div>
+          </>
         )}
 
         <button
@@ -119,7 +155,7 @@ export default function AuthForm({ variant }: AuthFormProps) {
         </button>
       </form>
 
-      <p className="mt-8 text-center text-sm text-red-700">
+      <p className="mt-8 text-center text-sm text-black">
         {alternativeText}{' '}
         <Link
           href={alternativeLink}
