@@ -8,7 +8,7 @@ interface AuthFormProps {
 
 export default function AuthForm({ variant }: AuthFormProps) {
   const isLogin = variant === 'login'
-  const title = isLogin ? 'Login to Medicore' : 'Create an Account'
+  const title = isLogin ? 'Login' : 'Create an Account'
   const actionText = isLogin ? 'Login' : 'Sign Up'
   const alternativeText = isLogin 
     ? "Don't have an account?" 
