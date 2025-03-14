@@ -3,31 +3,32 @@ import Link from 'next/link'
 import Nav from '@/components/nav'
 import Footer from '@/components/footer'
 
-
 interface ForumPost {
   id: string
   author: string
+  title: string
   content: string
   timestamp: Date
 }
 
 export default function DoctorForum() {
-  const [newPost, setNewPost] = useState('')
+  const [newPost, setNewPost] = useState({ title: '', content: '' })
   const [posts, setPosts] = useState<ForumPost[]>([])
 
   const handleSubmitPost = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newPost.trim()) return
+    if (!newPost.title.trim() || !newPost.content.trim()) return
 
     const tempPost: ForumPost = {
       id: Date.now().toString(),
       author: "Dr. ",
-      content: newPost,
+      title: newPost.title,
+      content: newPost.content,
       timestamp: new Date()
     }
 
     setPosts([tempPost, ...posts])
-    setNewPost('')
+    setNewPost({ title: '', content: '' })
   }
 
   return (
@@ -38,32 +39,46 @@ export default function DoctorForum() {
           Medical Discussion Forum
         </h1>
 
-   
         <div className="bg-white p-6 rounded-xl shadow-lg mb-8 border border-red-50">
           <form onSubmit={handleSubmitPost} className="space-y-4">
             <label className="block text-lg font-medium text-black">
               Create a New Post
             </label>
-            <div className="relative">
-              <textarea
-                value={newPost}
-                onChange={(e) => {
-                  if (e.target.value.length <= 1000) {
-                    setNewPost(e.target.value)
-                  }
-                }}
-                placeholder="Share your medical insights or ask a question..."
-                className="w-full min-h-[120px] p-4 rounded-lg border-red-200 bg-red-50/20 
+            
+            <div>
+              <input
+                value={newPost.title}
+                onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+                placeholder="Add a title..."
+                className="w-full p-4 rounded-lg border-red-200 bg-red-50/20 
                   shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 
-                  transition-all resize-y overflow-y-auto whitespace-pre-wrap break-words"
+                  transition-all mb-4"
                 required
-                maxLength={1000}
+                maxLength={120}
               />
-              <div className="absolute bottom-2 right-2 text-sm text-gray-500 bg-white/80 px-2 rounded">
-                {newPost.length}/1000
+              
+              <div className="relative">
+                <textarea
+                  value={newPost.content}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 1000) {
+                      setNewPost({...newPost, content: e.target.value})
+                    }
+                  }}
+                  placeholder="Share your medical insights or ask a question..."
+                  className="w-full min-h-[120px] p-4 rounded-lg border-red-200 bg-red-50/20 
+                    shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 
+                    transition-all resize-y overflow-y-auto whitespace-pre-wrap break-words"
+                  required
+                  maxLength={1000}
+                />
+                <div className="absolute bottom-2 right-2 text-sm text-gray-500 bg-white/80 px-2 rounded">
+                  {newPost.content.length}/1000
+                </div>
               </div>
             </div>
-            <div className="flex justify-end">
+            
+            <div className="flex justify-end gap-4">
               <button
                 type="submit"
                 className="py-2 px-6 rounded-lg shadow-sm text-sm font-semibold 
@@ -90,6 +105,7 @@ export default function DoctorForum() {
                       Doctor
                     </span>
                   </div>
+                  <h3 className="font-medium text-black mb-2">{post.title}</h3>
                   <p className="text-sm text-gray-600 line-clamp-3 mb-2">
                     {post.content}
                   </p>
