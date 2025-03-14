@@ -1,13 +1,15 @@
 import AuthForm from '../components/authForm'
 import Nav from "@/components/nav"
+import Footer from '@/components/footer'
 
 export default function LoginPage() {
   return(
-    <main className="min-h-screen pt-16">  
-    <Nav />
-      <div className="container mx-auto px-4">
-        <AuthForm variant="login" />
-      </div>
-    </main>
+    <main >  
+          <Nav />
+            <div className="min-h-screen pt-16 ">
+              <AuthForm variant="login" />
+            </div>
+            <Footer />
+          </main>
   )
 }
