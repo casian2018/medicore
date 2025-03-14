@@ -80,20 +80,20 @@ export default function VideoCallPage(): JSX.Element {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
-            <h1 className="text-3xl font-bold mb-4">Agora Video Call</h1>
-            <div className="grid grid-cols-2 gap-4 p-4 border border-gray-600 rounded-lg">
-                <div ref={localVideoRef} className="w-64 h-48 bg-gray-700 relative">
-                    {!joined && <div className="absolute inset-0 flex items-center justify-center">Local Video</div>}
+        <div className="flex flex-col items-center justify-center h-screen bg-white text-black">
+            <h1 className="text-3xl font-bold mb-4 text-red-600">Video Call</h1>
+            <div className="grid grid-cols-2 gap-4 p-4 border border-gray-300 rounded-lg">
+                <div ref={localVideoRef} className="w-64 h-48 bg-gray-200 relative">
+                    {!joined && <div className="absolute inset-0 flex items-center justify-center text-gray-500">Local Video</div>}
                 </div>
-                <div ref={remoteVideoRef} className="w-64 h-48 bg-gray-700 relative">
-                    {!joined && <div className="absolute inset-0 flex items-center justify-center">Remote Video</div>}
+                <div ref={remoteVideoRef} className="w-64 h-48 bg-gray-200 relative">
+                    {!joined && <div className="absolute inset-0 flex items-center justify-center text-gray-500">Remote Video</div>}
                 </div>
             </div>
             
             <div className="mt-6">
                 {isLoading ? (
-                    <button className="bg-gray-500 px-6 py-2 rounded-lg" disabled>
+                    <button className="bg-gray-300 px-6 py-2 rounded-lg" disabled>
                         Loading...
                     </button>
                 ) : !token ? (
@@ -103,16 +103,16 @@ export default function VideoCallPage(): JSX.Element {
                 ) : !joined ? (
                     <button 
                         onClick={startCall}
-                        className="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg"
+                        className="bg-red-600 hover:bg-red-500 px-6 py-2 rounded-lg text-white"
                     >
                         Join Call
                     </button>
                 ) : (
-                    <p className="text-green-400">Connected</p>
+                    <p className="text-green-600">Connected</p>
                 )}
             </div>
             
-            <div className="mt-4 text-sm text-gray-400">
+            <div className="mt-4 text-sm text-gray-600">
                 {isLoading ? (
                     "Loading token..."
                 ) : token ? (
