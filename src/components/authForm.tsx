@@ -97,18 +97,54 @@ export default function AuthForm({ variant }: AuthFormProps) {
         </div>
 
         {!isLogin && (
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-black">
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              required
-              className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
-            />
-          </div>
+          <>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-black">
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">
+                Account Type
+              </label>
+              <div className="flex gap-4">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="patient"
+                    name="accountType"
+                    value="patient"
+                    required
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-red-200"
+                  />
+                  <label htmlFor="patient" className="ml-2 text-black">
+                    Patient
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="doctor"
+                    name="accountType"
+                    value="doctor"
+                    required
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-red-200"
+                  />
+                  <label htmlFor="doctor" className="ml-2 text-black">
+                    Doctor
+                  </label>
+                </div>
+              </div>
+            </div>
+          </>
         )}
 
         <button
