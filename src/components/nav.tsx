@@ -75,7 +75,7 @@ export default function Nav() {
                 href="/pages/features"
                 className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-red-700 lg:p-0"
               >
-                Features
+                Diagnosis
               </Link>
             </li>
             <li>
