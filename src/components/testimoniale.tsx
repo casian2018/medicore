@@ -33,7 +33,7 @@ export default function Testimoniale() {
         >
             <div className="flex items-center mb-4">
             <img
-                src="https://via.placeholder.com/50"
+                src=""
                 alt="Profile Picture"
                 className="w-12 h-12 rounded-full mr-4"
             />
