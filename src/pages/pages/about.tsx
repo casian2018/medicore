@@ -15,8 +15,7 @@ export default function AboutUs() {
               </span>
             </h1>
             <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
-              Bridging cutting-edge AI with human expertise to deliver accessible, accurate healthcare solutions
-            </p>
+            Integrating cutting-edge AI with human expertise for accessible, accurate healthcare solutions.            </p>
           </header>
 
           <div className="space-y-16 sm:space-y-20">
@@ -30,11 +29,11 @@ export default function AboutUs() {
                     the crucial human connection in medical care.
                   </p>
                 </div>
-                <div className="w-full lg:w-1/2 bg-gradient-to-br from-red-50 to-white p-4 sm:p-6 md:p-8 rounded-xl border border-gray-100 order-1 lg:order-2">
+                <div className="w-full lg:w-1/2 p-4 sm:p-6 md:p-8 rounded-xl order-1 lg:order-2">
                   <img 
                     src="/Health321.jpg" 
                     alt="AI in healthcare" 
-                    className="rounded-lg w-full h-auto object-cover"
+                    className="rounded-lg w-full h-auto object-cover rounded-lg shadow-xl w-full h-auto object-cover transform transition duration-500 hover:shadow-2xl"
                   />
                 </div>
               </div>
