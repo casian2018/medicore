@@ -12,8 +12,8 @@ async function getUserData(req, res) {
         return;
     }
 
-    // console.log(req.cookies)
-    const cookies = req.cookies || {};
+    console.log(req.cookies)
+    const cookies = req.cookies;
     const token = cookies.token;
 
     if (!token) {

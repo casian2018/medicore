@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '@/pages/api/mongodb'; // Uses fixed MongoDB connection
+ // Uses fixed MongoDB connection
 import { ObjectId } from 'mongodb';
+import clientPromise from '../../mongodb';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req, res) {
     if (!req || !req.method) {
         return res.status(400).json({ message: 'Invalid request' });
     }
@@ -20,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ message: 'User and content are required' });
         }
 
-        const client = await clientPromise();
+        const client = await clientPromise;
         const db = client.db('medicore');
 
         // Find the post

@@ -40,44 +40,45 @@ if (!global._mongoClientPromise) {
 }
 
 clientPromise = global._mongoClientPromise;
+export default clientPromise;
 
-export default async function getUserData(req, res) {
-    if (req.method !== 'GET') {
-        return res.status(405).json({ message: 'Only GET requests are allowed' });
-    }
+// export default async function getUserData(req, res) {
+//     if (req.method !== 'GET') {
+//         return res.status(405).json({ message: 'Only GET requests are allowed' });
+//     }
 
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies.token;
+//     const cookies = parse(req.headers.cookie || '');
+//     const token = cookies.token;
 
-    if (!token) {
-        return res.status(401).json({ message: 'Not authenticated' });
-    }
+//     if (!token) {
+//         return res.status(401).json({ message: 'Not authenticated' });
+//     }
 
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const userId = decoded.userId;
+//     try {
+//         const decoded = jwt.verify(token, JWT_SECRET);
+//         const userId = decoded.userId;
 
-        const client = await clientPromise;
-        const database = client.db('your_database_name');
-        const collection = database.collection('users');
-        const user = await collection.findOne({ _id: new ObjectId(userId) });
+//         const client = await clientPromise;
+//         const database = client.db('medicore');
+//         const collection = database.collection('users');
+//         const user = await collection.findOne({ _id: new ObjectId(userId) });
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+//         if (!user) {
+//             return res.status(404).json({ message: 'User not found' });
+//         }
 
-        res.status(200).json({
-            education: user.education || 'N/A',
-            languages: user.languages || 'N/A',
-            department: user.department || 'N/A',
-            workHistory: user.workHistory || 'N/A',
-            organization: user.organization || 'N/A',
-            birthday: user.birthday || 'N/A',
-        });
-    } catch (error) {
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return res.status(401).json({ message: 'Invalid or expired token' });
-        }
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
-    }
-}
+//         res.status(200).json({
+//             education: user.education || 'N/A',
+//             languages: user.languages || 'N/A',
+//             department: user.department || 'N/A',
+//             workHistory: user.workHistory || 'N/A',
+//             organization: user.organization || 'N/A',
+//             birthday: user.birthday || 'N/A',
+//         });
+//     } catch (error) {
+//         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+//             return res.status(401).json({ message: 'Invalid or expired token' });
+//         }
+//         res.status(500).json({ message: 'Internal Server Error', error: error.message });
+//     }
+// }
