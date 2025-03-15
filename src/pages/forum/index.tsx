@@ -12,7 +12,7 @@ const Forum = () => {
         "Pediatrics",
         "Dermatology",
         "Gastroenterology",
-        "Endocrinology",
+        "Endocrinology",    
         "Rheumatology",
         "Nephrology",
         "Hematology",
