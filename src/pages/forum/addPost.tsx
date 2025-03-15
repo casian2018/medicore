@@ -8,28 +8,49 @@ interface ForumPost {
   author: string
   title: string
   content: string
+  tags: string[]
+  image?: string
   timestamp: Date
 }
 
 export default function DoctorForum() {
-  const [newPost, setNewPost] = useState({ title: '', content: '' })
+  const [newPost, setNewPost] = useState({ author: '', title: '', content: '', tags: [] as string[], image: '' })
   const [posts, setPosts] = useState<ForumPost[]>([])
 
-  const handleSubmitPost = (e: React.FormEvent) => {
+  const handleSubmitPost = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newPost.title.trim() || !newPost.content.trim()) return
+    if (!newPost.author.trim() || !newPost.title.trim() || !newPost.content.trim() || newPost.tags.length === 0) return
 
-    const tempPost: ForumPost = {
-      id: Date.now().toString(),
-      author: "Dr. ",
+    const tempPost = {
+      author: newPost.author,
       title: newPost.title,
       content: newPost.content,
-      timestamp: new Date()
+      tags: newPost.tags,
+      image: newPost.image || '',  // Send image name or empty string
     }
 
-    setPosts([tempPost, ...posts])
-    setNewPost({ title: '', content: '' })
-  }
+    // Send data to API
+    try {
+        const response = await fetch('/api/forum/addPost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(tempPost),
+        })
+
+        if (response.ok) {
+            const data = await response.json()
+            setPosts([{ ...data, timestamp: new Date(data.timestamp) }, ...posts])  // Update the posts list with the new post
+            setNewPost({ author: '', title: '', content: '', tags: [], image: '' })
+            } else {
+            const errorData = await response.json()
+            console.error(errorData.message)
+        }
+    } catch (error) {
+        console.error('Error submitting post:', error)
+    }
+}
 
   return (
     <main>  
@@ -44,45 +65,52 @@ export default function DoctorForum() {
             <label className="block text-lg font-medium text-black">
               Create a New Post
             </label>
-            
-            <div>
-              <input
-                value={newPost.title}
-                onChange={(e) => setNewPost({...newPost, title: e.target.value})}
-                placeholder="Add a title..."
-                className="w-full p-4 rounded-lg border-red-200 bg-red-50/20 
-                  shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 
-                  transition-all mb-4"
-                required
-                maxLength={120}
-              />
-              
-              <div className="relative">
-                <textarea
-                  value={newPost.content}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 1000) {
-                      setNewPost({...newPost, content: e.target.value})
-                    }
-                  }}
-                  placeholder="Share your medical insights or ask a question..."
-                  className="w-full min-h-[120px] p-4 rounded-lg border-red-200 bg-red-50/20 
-                    shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 
-                    transition-all resize-y overflow-y-auto whitespace-pre-wrap break-words"
-                  required
-                  maxLength={1000}
-                />
-                <div className="absolute bottom-2 right-2 text-sm text-gray-500 bg-white/80 px-2 rounded">
-                  {newPost.content.length}/1000
-                </div>
-              </div>
-            </div>
-            
+
+            <input
+              value={newPost.author}
+              onChange={(e) => setNewPost({...newPost, author: e.target.value})}
+              placeholder="Your Name (e.g., Dr. Smith)"
+              className="w-full p-4 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
+              required
+            />
+
+            <input
+              value={newPost.title}
+              onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+              placeholder="Post Title..."
+              className="w-full p-4 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
+              required
+              maxLength={120}
+            />
+
+            <textarea
+              value={newPost.content}
+              onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+              placeholder="Share your medical insights or ask a question..."
+              className="w-full min-h-[120px] p-4 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
+              required
+              maxLength={1000}
+            />
+
+            <input
+              value={newPost.tags}
+              onChange={(e) => setNewPost({...newPost, tags: e.target.value.split(',').map(tag => tag.trim())})}
+              placeholder="Tags (comma-separated, e.g., Cardiology, Neurology)"
+              className="w-full p-4 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
+              required
+            />
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setNewPost({...newPost, image: e.target.files?.[0]?.name || ''})}
+              className="w-full p-2 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
+            />
+
             <div className="flex justify-end gap-4">
               <button
                 type="submit"
-                className="py-2 px-6 rounded-lg shadow-sm text-sm font-semibold 
-                  text-white bg-red-600 hover:bg-red-700 transition-colors duration-200"
+                className="py-2 px-6 rounded-lg shadow-sm text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors duration-200"
               >
                 Post to Forum
               </button>
@@ -92,11 +120,7 @@ export default function DoctorForum() {
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
           {posts.map((post) => (
-            <Link 
-              key={post.id} 
-              href={`/forum/${post.id}`}
-              className="block bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-red-50"
-            >
+            <Link key={post.id} href={`/forum/${post.id}`} className="block bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-red-50">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
@@ -106,19 +130,11 @@ export default function DoctorForum() {
                     </span>
                   </div>
                   <h3 className="font-medium text-black mb-2">{post.title}</h3>
-                  <p className="text-sm text-gray-600 line-clamp-3 mb-2">
-                    {post.content}
-                  </p>
+                  <p className="text-sm text-gray-600 line-clamp-3 mb-2">{post.content}</p>
+                  <p className="text-xs text-gray-400">Tags: {post.tags.join(', ')}</p>
+                  {post.image && <img src={post.image} alt="Post image" className="w-full h-40 object-cover mt-2 rounded-lg" />}
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-400">
-                      {post.timestamp.toLocaleDateString()}
-                    </span>
-                    <span className="text-red-500 flex items-center gap-1">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                      </svg>
-                      0 Replies
-                    </span>
+                    <span className="text-gray-400">{post.timestamp.toLocaleDateString()}</span>
                   </div>
                 </div>
               </div>
