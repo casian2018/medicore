@@ -26,23 +26,12 @@ export default function Chat() {
   useEffect(() => {
     // Fetch user details
     const fetchUser = async () => {
-      const res = await fetch("/api/user");
+      const res = await fetch("/api/profile/user");
       const data = await res.json();
       setUser(data);
     };
 
     fetchUser();
-  }, []);
-
-  useEffect(() => {
-    // Fetch video call ID from VideoCallPage
-    const fetchVideoCallId = async () => {
-      const res = await fetch("/api/videoCallId");
-      const data = await res.json();
-      setVideoCallId(data.videoCallId);
-    };
-
-    fetchVideoCallId();
   }, []);
 
   const sendMessage = async () => {

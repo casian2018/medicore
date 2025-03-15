@@ -3,7 +3,6 @@ import { RingLoader } from "react-spinners";
 
 
 const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID as string;
-const CHANNEL_NAME = "main";
 const UID = Math.floor(Math.random() * 10000);
 
 export default function VideoCallPage(): JSX.Element {
@@ -18,13 +17,14 @@ export default function VideoCallPage(): JSX.Element {
     const [isVideoEnabled, setIsVideoEnabled] = useState<boolean>(true);
     const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(true);
     const [isConnecting, setIsConnecting] = useState<boolean>(false);
+    const [channelName , setChannelName] = useState<string | null>(null);
 
 
     useEffect(() => {
         setIsLoading(true);
         
         // Fetch token
-        fetch(`/api/agora/agoraToken?channelName=${CHANNEL_NAME}&uid=${UID}`)
+        fetch(`/api/agora/agoraToken?channelName=${channelName}&uid=${UID}`)
             .then(res => res.json())
             .then(data => {
                 setToken(data.token);
@@ -42,6 +42,35 @@ export default function VideoCallPage(): JSX.Element {
             });
         }
     }, []);
+    useEffect(() => {
+        setIsLoading(true);
+    
+        const fetchToken = async () => {
+            try {
+                const res = await fetch("/api/agora/agoraToken", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        userId: "USER_ID_FROM_AUTH", // Replace with actual user ID
+                        recipientId: "RECIPIENT_ID_FROM_CHAT" // Dynamic recipient
+                    }),
+                });
+    
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Failed to fetch token");
+    
+                setToken(data.token);
+                setChannelName(data.channelName); // Store dynamic channel name
+            } catch (error) {
+                console.error("Error fetching token:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+    
+        fetchToken();
+    }, []);
+    
     async function startCallLoad(): Promise<void> {
                    try {
                     setIsConnecting(true);
@@ -83,7 +112,7 @@ export default function VideoCallPage(): JSX.Element {
             });
 
             console.log("Joining channel with token:", token);
-            await client.join(APP_ID, CHANNEL_NAME, token, UID);
+            await client.join(APP_ID, channelName, token, UID);
             console.log("Successfully joined channel");
 
             const AgoraRTC = await import("agora-rtc-sdk-ng");
@@ -187,7 +216,7 @@ export default function VideoCallPage(): JSX.Element {
                 {isLoading ? (
                     "Loading token..."
                 ) : token ? (
-                    `Token loaded. Channel: ${CHANNEL_NAME}`
+                    `Token loaded. Channel: ${channelName}`
                 ) : (
                     "Failed to load token. Check API endpoint."
                 )}
