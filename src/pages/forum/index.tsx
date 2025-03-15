@@ -97,7 +97,7 @@ const Forum = () => {
                                     aria-label={`Select ${tag} category`}
                                 >
                                     <div className="flex items-center">
-                                        <span className="h-6 w-6 rounded-full bg-[#FF4500] mr-3 flex-shrink-0"></span>
+                                        <span className="h-6 w-6 rounded-full bg-red-600 mr-3 flex-shrink-0"></span>
                                         {tag}
                                     </div>
                                 </div>
