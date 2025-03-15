@@ -9,7 +9,7 @@ export default function Home() {
     <Nav />
     <Main />
     <Testimoniale/>
-    <div className='flex h-screen'>
+    <div className='flex h-20'>
       <h1></h1>
     </div>
   
