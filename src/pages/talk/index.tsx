@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import VideoCallPage from "../VideoCallPage"; // Adjust the import path as necessary
+import VideoCallPage from "../pages/VideoCallPage"; // Adjust the import path as necessary
 
 export default function Chat() {
   const [message, setMessage] = useState<string>("");

@@ -10,16 +10,16 @@ interface ForumPost {
     timestamp: Date
 }
 
-let posts: ForumPost[] = []
-
-// Removed duplicate handler function
 const uri = process.env.MONGODB_URI
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+if (!uri) {
+    throw new Error('Please define the MONGODB_URI environment variable inside .env.local')
+}
+const client = new MongoClient(uri)
 
 async function savePostToDB(post: ForumPost) {
     try {
         await client.connect()
-        const database = client.db('forum')
+        const database = client.db('medicore')
         const collection = database.collection('posts')
         const result = await collection.insertOne(post)
         return result
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 if (!uri) {
     throw new Error('Please define the MONGODB_URI environment variable inside .env.local')
 }
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+const client = new MongoClient(uri)
         const newPost: ForumPost = {
             id: uuidv4(),
             author,
@@ -49,11 +49,11 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
         try {
             const result = await savePostToDB(newPost)
-            return res.status(201).json(result.ops[0])
+            return res.status(201).json(result)
         } catch (error) {
             return res.status(500).json({ message: 'Error saving post to database', error })
         }
     } else {
         return res.status(405).json({ message: 'Method not allowed' })
     }
-}            return res.status(201).json(result)
+}

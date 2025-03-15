@@ -12,7 +12,7 @@ export default function ContactPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setSuccess('')
@@ -22,10 +22,33 @@ export default function ContactPage() {
       return
     }
 
-    // Add your form submission logic here
-    console.log('Form submitted:', formData)
-    setSuccess('Your message has been sent successfully!')
-    setFormData({ name: '', email: '', subject: '', message: '' })
+    const webhookUrl = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_LINK;
+    if (!webhookUrl) {
+      setError('Webhook URL is not defined. Please contact support.');
+      return;
+    }
+    const payload = {
+      content: `**Name:** ${formData.name}\n**Email:** ${formData.email}\n**Subject:** ${formData.subject}\n**Message:** ${formData.message}`
+    }
+
+    try {
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (response.ok) {
+        setSuccess('Your message has been sent successfully!')
+        setFormData({ name: '', email: '', subject: '', message: '' })
+      } else {
+        setError('Failed to send message. Please try again later.')
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again later.')
+    }
   }
 
   return (

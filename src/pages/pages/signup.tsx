@@ -1,4 +1,4 @@
-import AuthForm from '../components/authForm'
+import AuthForm from '../../components/authForm'
 import Nav from "@/components/nav"
 import Footer from '@/components/footer'
 export default function SignupPage() {
