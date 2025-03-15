@@ -7,7 +7,7 @@ export default function AboutUs() {
     <main className="min-h-screen flex flex-col">
       <Nav />
       <div className="flex-1 max-w-4xl mx-auto p-6">
-        <div className="bg-white p-8 rounded-xl shadow-lg border border-red-50">
+        <div className="bg-white p-8 rounded-xl shadow-lg border border-red-50 mt-8">
           <h1 className="text-3xl font-bold text-center text-red-600 mb-8">
             Revolutionizing Healthcare with AI
           </h1>
