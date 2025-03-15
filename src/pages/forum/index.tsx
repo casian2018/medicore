@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { FaArrowUp, FaArrowDown, FaComment } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaComment, FaBars, FaTimes } from "react-icons/fa";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
 
@@ -24,6 +24,8 @@ const Forum = () => {
         { _id: string; title: string; content: string; profilePic: string }[]
     >([]);
     const [loading, setLoading] = useState(false);
+
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
     useEffect(() => {
         if (selectedTag) {
@@ -58,6 +60,15 @@ const Forum = () => {
                 </button>
 
                 <div className="flex flex-1 overflow-hidden pt-8">
+                    {/* Sidebar Backdrop */}
+                    {isSidebarOpen && (
+                        <div
+                            className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+                            onClick={toggleSidebar}
+                            aria-hidden="true"
+                        />
+                    )}
+
                     {/* Sidebar */}
                     <div className={`lg:w-64 w-64 fixed lg:relative h-full lg:h-auto z-40 bg-gray-50 shadow-sm overflow-y-auto transform transition-transform duration-300 ease-in-out 
                         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
@@ -75,33 +86,26 @@ const Forum = () => {
                                     key={tag}
                                     role="button"
                                     tabIndex={0}
-                                    onClick={() => setSelectedTag(tag)}
+                                    onClick={() => {
+                                        setSelectedTag(tag);
+                                        setIsSidebarOpen(false);
+                                    }}
                                     onKeyDown={(e) => e.key === "Enter" && setSelectedTag(tag)}
                                     className={`px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors rounded-md my-1 mx-2 ${
                                         selectedTag === tag
-                                            ? "bg-blue-50 border-l-4 border-red-600 font-medium text-gray-900"
+                                            ? "bg-blue-50 border-l-4 border-[#FF4500] font-medium text-gray-900"
                                             : "text-gray-700"
                                     }`}
                                     aria-selected={selectedTag === tag}
                                     aria-label={`Select ${tag} category`}
                                 >
                                     <div className="flex items-center">
-                                        <span className="h-6 w-6 rounded-full bg-red-600 mr-3 flex-shrink-0"></span>
+                                        <span className="h-6 w-6 rounded-full bg-[#FF4500] mr-3 flex-shrink-0"></span>
                                         {tag}
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
-
-                    {/* Bottom fixed button to create a post */}
-                    <div className="fixed bottom-8 right-8">
-                        <button
-                            onClick={() => router.push("/forum/addPost")}
-                            className="bg-red-600 text-white font-medium px-6 py-3 rounded-full text-sm hover:bg-red-700 transition-colors shadow-lg"
-                        >
-                            + Create Post
-                        </button>
                     </div>
 
                     {/* Main content area */}
@@ -115,7 +119,7 @@ const Forum = () => {
                                 </div>
                             </div>
 
-                            {/* Bottom fixed button to create a post */}
+                            {/* Single Create Post Button */}
                             <div className="fixed bottom-8 right-8 z-30">
                                 <button 
                                     onClick={() => router.push('/forum/addPost')}
