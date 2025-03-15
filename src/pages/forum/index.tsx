@@ -34,7 +34,7 @@ const Forum = () => {
                         setPosts(data);
                         setLoading(false);
                     });
-            }, 2000);
+            }, 500);
         }
     }, [selectedTag]);
 
@@ -75,6 +75,15 @@ const Forum = () => {
                                 </div>
                             ))}
                         </div>
+                    </div>
+                    {/* Bottom fixed button to create a post */}
+                    <div className="fixed bottom-8 right-8">
+                        <button 
+                            onClick={() => router.push('/forum/addPost')}
+                            className="bg-[#FF4500] text-white font-medium px-6 py-3 rounded-full text-sm hover:bg-[#ff5414] transition-colors shadow-lg"
+                        >
+                            + Create Post
+                        </button>
                     </div>
 
                     {/* Main content area */}

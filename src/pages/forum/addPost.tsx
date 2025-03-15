@@ -1,61 +1,73 @@
-import { useState } from 'react'
-import Link from 'next/link'
-import Nav from '@/components/nav'
-import Footer from '@/components/footer'
+import { useState } from "react";
+import Link from "next/link";
+import Nav from "@/components/nav";
+import Footer from "@/components/footer";
 
 interface ForumPost {
-  id: string
-  author: string
-  title: string
-  content: string
-  tags: string[]
-  image?: string
-  timestamp: Date
+  id: string;
+  author: string;
+  title: string;
+  content: string;
+  tags: string[];
+  image?: string;
+  timestamp: Date;
 }
 
 export default function DoctorForum() {
-  const [newPost, setNewPost] = useState({ author: '', title: '', content: '', tags: [] as string[], image: '' })
-  const [posts, setPosts] = useState<ForumPost[]>([])
+  const [newPost, setNewPost] = useState({
+    author: "",
+    title: "",
+    content: "",
+    tags: [] as string[],
+    image: "",
+  });
+  const [posts, setPosts] = useState<ForumPost[]>([]);
 
   const handleSubmitPost = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newPost.author.trim() || !newPost.title.trim() || !newPost.content.trim() || newPost.tags.length === 0) return
+    e.preventDefault();
+    if (
+      !newPost.author.trim() ||
+      !newPost.title.trim() ||
+      !newPost.content.trim() ||
+      newPost.tags.length === 0
+    )
+      return;
 
     const tempPost = {
       author: newPost.author,
       title: newPost.title,
       content: newPost.content,
       tags: newPost.tags,
-      image: newPost.image || '',  // Send image name or empty string
-    }
+      image: newPost.image || "", // Send image name or empty string
+    };
 
     // Send data to API
     try {
-        const response = await fetch('/api/forum/addPost', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(tempPost),
-        })
+      const response = await fetch("/api/forum/addPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tempPost),
+      });
 
-        if (response.ok) {
-            const data = await response.json()
-            setPosts([{ ...data, timestamp: new Date(data.timestamp) }, ...posts])  // Update the posts list with the new post
-            setNewPost({ author: '', title: '', content: '', tags: [], image: '' })
-            } else {
-            const errorData = await response.json()
-            console.error(errorData.message)
-        }
+      if (response.ok) {
+        const data = await response.json();
+        setPosts([{ ...data, timestamp: new Date(data.timestamp) }, ...posts]); // Update the posts list with the new post
+        setNewPost({ author: "", title: "", content: "", tags: [], image: "" });
+      } else {
+        const errorData = await response.json();
+        console.error(errorData.message);
+      }
     } catch (error) {
-        console.error('Error submitting post:', error)
+      console.error("Error submitting post:", error);
     }
-}
+  };
 
   return (
-    <main>  
+    <main>
       <Nav />
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-6 min-h-screen flex flex-col justify-between">
         <h1 className="text-3xl font-bold mb-8 text-center text-black">
           Medical Discussion Forum
         </h1>
@@ -68,7 +80,9 @@ export default function DoctorForum() {
 
             <input
               value={newPost.author}
-              onChange={(e) => setNewPost({...newPost, author: e.target.value})}
+              onChange={(e) =>
+                setNewPost({ ...newPost, author: e.target.value })
+              }
               placeholder="Your Name (e.g., Dr. Smith)"
               className="w-full p-4 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
               required
@@ -76,7 +90,9 @@ export default function DoctorForum() {
 
             <input
               value={newPost.title}
-              onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+              onChange={(e) =>
+                setNewPost({ ...newPost, title: e.target.value })
+              }
               placeholder="Post Title..."
               className="w-full p-4 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
               required
@@ -85,7 +101,9 @@ export default function DoctorForum() {
 
             <textarea
               value={newPost.content}
-              onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+              onChange={(e) =>
+                setNewPost({ ...newPost, content: e.target.value })
+              }
               placeholder="Share your medical insights or ask a question..."
               className="w-full min-h-[120px] p-4 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
               required
@@ -94,7 +112,12 @@ export default function DoctorForum() {
 
             <input
               value={newPost.tags}
-              onChange={(e) => setNewPost({...newPost, tags: e.target.value.split(',').map(tag => tag.trim())})}
+              onChange={(e) =>
+                setNewPost({
+                  ...newPost,
+                  tags: e.target.value.split(",").map((tag) => tag.trim()),
+                })
+              }
               placeholder="Tags (comma-separated, e.g., Cardiology, Neurology)"
               className="w-full p-4 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
               required
@@ -103,7 +126,12 @@ export default function DoctorForum() {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => setNewPost({...newPost, image: e.target.files?.[0]?.name || ''})}
+              onChange={(e) =>
+                setNewPost({
+                  ...newPost,
+                  image: e.target.files?.[0]?.name || "",
+                })
+              }
               className="w-full p-2 rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 transition-all"
             />
 
@@ -120,35 +148,47 @@ export default function DoctorForum() {
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
           {posts.map((post) => (
-            <Link key={post.id} href={`/forum/${post.id}`} className="block bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-red-50">
+            <Link
+              key={post.id}
+              href={`/forum/${post.id}`}
+              className="block bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-red-50"
+            >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="font-semibold text-black">{post.author}</span>
+                    <span className="font-semibold text-black">
+                      {post.author}
+                    </span>
                     <span className="text-red-500 text-xs px-2 py-1 rounded-full bg-red-50">
                       Doctor
                     </span>
                   </div>
                   <h3 className="font-medium text-black mb-2">{post.title}</h3>
-                  <p className="text-sm text-gray-600 line-clamp-3 mb-2">{post.content}</p>
-                  <p className="text-xs text-gray-400">Tags: {post.tags.join(', ')}</p>
-                  {post.image && <img src={post.image} alt="Post image" className="w-full h-40 object-cover mt-2 rounded-lg" />}
+                  <p className="text-sm text-gray-600 line-clamp-3 mb-2">
+                    {post.content}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Tags: {post.tags.join(", ")}
+                  </p>
+                  {post.image && (
+                    <img
+                      src={post.image}
+                      alt="Post image"
+                      className="w-full h-40 object-cover mt-2 rounded-lg"
+                    />
+                  )}
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-400">{post.timestamp.toLocaleDateString()}</span>
+                    <span className="text-gray-400">
+                      {post.timestamp.toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
               </div>
             </Link>
           ))}
-
-          {posts.length === 0 && (
-            <div className="text-center py-12 text-gray-500 col-span-full">
-              No posts yet. Be the first to share!
-            </div>
-          )}
         </div>
       </div>
       <Footer />
     </main>
-  )
+  );
 }

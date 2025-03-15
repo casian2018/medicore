@@ -1,4 +1,5 @@
 import React from 'react';
+import router from 'next/router';
 
 const Main = () => {
   return (
@@ -12,7 +13,7 @@ const Main = () => {
               <p className="text-lg text-gray-700 leading-relaxed mt-6 max-w-xl">
                 MediCore is an innovative platform that connects doctors and patients, allowing users to receive diagnoses and medical advice. It also provides a forum where doctors can collaborate, share insights, and engage with each other in a professional community.
               </p>
-              <button className="mt-8 bg-red-700 text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:bg-red-800 transition duration-300">
+              <button className="mt-8 bg-red-700 text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:bg-red-800 transition duration-300" onClick={() => router.push('/talk')}>
                 Get your diagnosis
               </button>
             </div>

@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
-import Nav from '@/components/nav'
-import Footer from '@/components/footer'
+import Nav from '@/components/nav';
+import Footer from '@/components/footer';
+
 interface Response {
     user: string;
     date: string;
@@ -12,6 +13,7 @@ interface Response {
 }
 
 interface Post {
+    user: ReactNode;
     _id: string;
     title: string;
     date: string;
@@ -25,17 +27,46 @@ export default function ForumPage() {
     const router = useRouter();
     const { id } = router.query;
     const [post, setPost] = useState<Post | null>(null);
+    const [comment, setComment] = useState('');
+    const [user, setUser] = useState<string | null>(null);
 
     useEffect(() => {
         if (id) {
-            // Fetch post data from API or server
             fetch(`/api/forum/${id}`)
                 .then(response => response.json())
                 .then(data => setPost(data));
         }
     }, [id]);
 
-    console.log(post?.title)
+    useEffect(() => {
+        fetch('/api/profile/user')
+            .then(response => response.json())
+            .then(data => setUser(data.username))
+            .catch(() => setUser(null));
+    }, []);
+
+    const handleCommentSubmit = async () => {
+        if (!comment.trim() || !user) return;
+        
+        const newResponse = {
+            user,
+            date: new Date().toISOString(),
+            title: 'User Response',
+            content: comment,
+            images: {}
+        };
+
+        const response = await fetch(`/api/forum/${id}/response`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newResponse)
+        });
+
+        if (response.ok) {
+            setPost(prev => prev ? { ...prev, responses: [...prev.responses, newResponse] } : null);
+            setComment('');
+        }
+    };
 
     if (!post) {
         return <div>Loading...</div>;
@@ -43,82 +74,61 @@ export default function ForumPage() {
 
     return (
         <>
-        <Nav />
-             <div className="bg-white min-h-screen p-6">
-                
-      <div className="max-w-3xl mx-auto bg-gray-50 shadow-md rounded-lg p-6 border border-gray-200 mt-20">
-        {/* Forum Header */}
-        <div className="flex items-center jus space-x-3 mb-4">
-          <div className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-            Neuroplasticity
-          </div>
-          <span className="text-gray-600 text-sm">Posted by Dr_Neuroscience • 3 days ago</span>
-        </div>
-
-        {/* Main Post */}
-        <h1 className="text-2xl font-bold text-gray-900">
-          Advances in Neuroplasticity Research
-        </h1>
-        <p className="text-gray-700 mt-2">
-          Neuroplasticity is the brain's ability to reorganize itself by forming new neural connections.
-          Recent studies show how this process can aid in recovery after brain injury or stroke.
-        </p>
-
-        {/* Engagement Buttons */}
-        <div className="flex space-x-6 mt-4 text-gray-600">
-          <button className="flex items-center space-x-1 hover:text-red-600">
-            <span>⬆️ 20K</span>
-          </button>
-          <button className="flex items-center space-x-1 hover:text-red-600">
-            <span>💬 21K</span>
-          </button>
-          <button className="flex items-center space-x-1 hover:text-red-600">
-            <span>⭐ 1</span>
-          </button>
-          <button className="flex items-center space-x-1 hover:text-red-600">
-            <span>🔗 Share</span>
-          </button>
-        </div>
-
-        {/* Comment Section */}
-        <h2 className="mt-6 text-lg font-semibold text-gray-900">Responses</h2>
-
-        <div className="mt-4 space-y-4">
-          {/* Comment 1 */}
-          <div className="bg-gray-50 border-l-4 border-red-600 p-4 shadow-sm rounded-lg">
-            <div className="flex items-center space-x-2">
-              <span className="font-bold text-gray-900">Dr. Smith</span>
-              <span className="text-gray-500 text-sm">• 11.03.2025</span>
+            <Nav />
+            <div className="bg-white min-h-screen p-6">
+                <div className="max-w-3xl mx-auto bg-gray-50 shadow-md rounded-lg p-6 border border-gray-200 mt-20">
+                    <div className="flex items-center space-x-3 mb-4">
+                        <div className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            {post.tags[0]}
+                        </div>
+                        <span className="text-gray-600 text-sm">Posted by {post.user} • {new Date(post.date).toLocaleDateString()}</span>
+                    </div>
+                    <h1 className="text-2xl font-bold text-gray-900">{post.title}</h1>
+                    <p className="text-gray-700 mt-2">{post.content}</p>
+                    <div className="flex space-x-6 mt-4 text-gray-600">
+                        <button className="flex items-center space-x-1 hover:text-red-600">
+                            <span>⬆️ 20K</span>
+                        </button>
+                        <button className="flex items-center space-x-1 hover:text-red-600">
+                            <span>💬 {post.responses.length}</span>
+                        </button>
+                        <button className="flex items-center space-x-1 hover:text-red-600">
+                            <span>⭐ 1</span>
+                        </button>
+                        <button className="flex items-center space-x-1 hover:text-red-600">
+                            <span>🔗 Share</span>
+                        </button>
+                    </div>
+                    <h2 className="mt-6 text-lg font-semibold text-gray-900">Responses</h2>
+                    <div className="mt-4 space-y-4">
+                        {post.responses.map((response, index) => (
+                            <div key={index} className="bg-gray-50 border-l-4 border-red-600 p-4 shadow-sm rounded-lg">
+                                <div className="flex items-center space-x-2">
+                                    <span className="font-bold text-gray-900">{response.user}</span>
+                                    <span className="text-gray-500 text-sm">• {new Date(response.date).toLocaleDateString()}</span>
+                                </div>
+                                <p className="text-gray-700 mt-2">{response.content}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="mt-6">
+                        <input
+                            type="text"
+                            placeholder="Add a comment..."
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
+                        />
+                        <button
+                            onClick={handleCommentSubmit}
+                            className="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                        >
+                            Submit
+                        </button>
+                    </div>
+                </div>
             </div>
-            <p className="text-gray-700 mt-2">
-              The concept of neuroplasticity has been pivotal in rehabilitation therapies.
-              Looking forward to seeing more clinical applications.
-            </p>
-          </div>
-
-          {/* Comment 2 */}
-          <div className="bg-gray-50 border-l-4 border-red-600 p-4 shadow-sm rounded-lg">
-            <div className="flex items-center space-x-2">
-              <span className="font-bold text-gray-900">Dr. Allen</span>
-              <span className="text-gray-500 text-sm">• 12.03.2025</span>
-            </div>
-            <p className="text-gray-700 mt-2">
-              It's also crucial to research how neuroplasticity can slow the cognitive decline associated with aging.
-            </p>
-          </div>
-        </div>
-
-        {/* Add a Comment */}
-        <div className="mt-6">
-          <input
-            type="text"
-            placeholder="Add a comment..."
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-          />
-        </div>
-      </div>
-    </div>
-                   <Footer />     
+            <Footer />
         </>
     );
 }
