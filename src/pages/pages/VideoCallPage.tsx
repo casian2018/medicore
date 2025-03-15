@@ -62,12 +62,13 @@ export default function VideoCallPage(): JSX.Element {
             console.log("Successfully joined channel");
 
             const AgoraRTC = await import("agora-rtc-sdk-ng");
-            const localTrack = await AgoraRTC.default.createCameraVideoTrack();
+            const localVideoTrack = await AgoraRTC.default.createCameraVideoTrack();
+            const localAudioTrack = await AgoraRTC.default.createMicrophoneAudioTrack();
             if (localVideoRef.current) {
-                localTrack.play(localVideoRef.current);
+                localVideoTrack.play(localVideoRef.current);
             }
 
-            await client.publish([localTrack]);
+            await client.publish([localVideoTrack, localAudioTrack]);
             setJoined(true);
         } catch (error) {
             console.error("Error joining channel:", error);
