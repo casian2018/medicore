@@ -70,7 +70,7 @@ const Forum = () => {
                     )}
 
                     {/* Sidebar */}
-                    <div className={`lg:w-64 w-64 fixed lg:relative h-full lg:h-auto z-40 bg-gray-50 shadow-sm overflow-y-auto transform transition-transform duration-300 ease-in-out 
+                    <div className={`lg:w-64 w-64 fixed lg:relative h-full lg:h-auto z-40 bg-gray-50 shadow-sm overflow-y-auto transform transition-transform duration-300 ease-in-out mt-13 
                         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
                     >
                         <div className="p-4 border-b border-gray-200 flex justify-between items-center">
