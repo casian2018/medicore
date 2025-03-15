@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { FaArrowUp, FaArrowDown, FaComment } from 'react-icons/fa';
+import { FaArrowUp, FaArrowDown, FaComment, FaBars, FaTimes } from 'react-icons/fa';
 import Nav from "@/components/nav"
 import Footer from "@/components/footer"
 
 const Forum = () => {
     const router = useRouter();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [tags] = useState([
         "Neuro",
         "Cardio",
@@ -42,15 +43,32 @@ const Forum = () => {
         router.push("/forum/addPost");
     };
 
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
     return (
         <>
             <Nav />
             <div className="flex flex-col min-h-screen bg-white">
+                {/* Mobile Menu Button */}
+                <button
+                    onClick={toggleSidebar}
+                    className="lg:hidden fixed top-20 left-4 z-50 p-2 rounded-full bg-[#FF4500] text-white shadow-lg"
+                    aria-label="Toggle navigation"
+                >
+                    {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+                </button>
+
                 <div className="flex flex-1 overflow-hidden pt-8">
                     {/* Sidebar */}
-                    <div className="w-64 bg-gray-50 shadow-sm overflow-y-auto">
-                        <div className="p-4 border-b border-gray-200">
+                    <div className={`lg:w-64 w-64 fixed lg:relative h-full lg:h-auto z-40 bg-gray-50 shadow-sm overflow-y-auto transform transition-transform duration-300 ease-in-out 
+                        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+                    >
+                        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
                             <h2 className="font-medium text-gray-600 uppercase text-xs">Medical Topics</h2>
+                            <FaTimes 
+                                className="lg:hidden cursor-pointer text-gray-500"
+                                onClick={toggleSidebar}
+                            />
                         </div>
                         <div className="py-2">
                             {tags.map((tag) => (
@@ -58,7 +76,10 @@ const Forum = () => {
                                     key={tag}
                                     role="button"
                                     tabIndex={0}
-                                    onClick={() => setSelectedTag(tag)}
+                                    onClick={() => {
+                                        setSelectedTag(tag);
+                                        setIsSidebarOpen(false);
+                                    }}
                                     onKeyDown={(e) => e.key === 'Enter' && setSelectedTag(tag)}
                                     className={`px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors rounded-md my-1 mx-2 ${
                                         selectedTag === tag 
@@ -76,18 +97,9 @@ const Forum = () => {
                             ))}
                         </div>
                     </div>
-                    {/* Bottom fixed button to create a post */}
-                    <div className="fixed bottom-8 right-8">
-                        <button 
-                            onClick={() => router.push('/forum/addPost')}
-                            className="bg-[#FF4500] text-white font-medium px-6 py-3 rounded-full text-sm hover:bg-[#ff5414] transition-colors shadow-lg"
-                        >
-                            + Create Post
-                        </button>
-                    </div>
 
                     {/* Main content area */}
-                    <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
+                    <div className="flex-1 overflow-y-auto p-4 bg-gray-100 lg:ml-0 mt-8 lg:mt-0">
                         <div className="max-w-3xl mx-auto pt-12">
                             <div className="bg-gray-50 rounded-lg shadow-sm p-4 mb-5 flex items-center">
                                 <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#FF4500] to-[#FF8717] mr-4 flex-shrink-0"></div>
@@ -97,13 +109,24 @@ const Forum = () => {
                                 </div>
                             </div>
 
+                            {/* Bottom fixed button to create a post */}
+                            <div className="fixed bottom-8 right-8 z-30">
+                                <button 
+                                    onClick={() => router.push('/forum/addPost')}
+                                    className="bg-[#FF4500] text-white font-medium px-6 py-3 rounded-full text-sm hover:bg-[#ff5414] transition-colors shadow-lg flex items-center"
+                                >
+                                    <span className="lg:hidden">+</span>
+                                    <span className="hidden lg:inline">Create Post</span>
+                                </button>
+                            </div>
+
                             {loading ? (
                                 <div className="flex justify-center my-12 flex-col items-center">
                                     <div className="w-16 h-16 border-4 border-[#FF4500] border-t-transparent rounded-full animate-spin mb-4"></div>
                                     <p className="text-gray-700 font-medium">Loading discussions...</p>
                                 </div>
                             ) : posts.length > 0 ? (
-                                <div className="space-y-4">
+                                <div className="space-y-4 pb-16">
                                     {posts.map((post) => (
                                         <div 
                                             key={post._id} 
