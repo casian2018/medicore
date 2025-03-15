@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Sidebar from "@/components/sidebar";
-
+import Nav from '@/components/nav'
+import Footer from '@/components/footer'
 const Forum = () => {
     const router = useRouter();
     const [tags] = useState([
@@ -42,6 +43,7 @@ const Forum = () => {
 
     return (
         <div className="flex h-screen">
+            
             <Sidebar
                 tags={tags}
                 selectedTag={selectedTag}

@@ -21,8 +21,6 @@ export default function ContactPage() {
       setError('Please fill in all required fields')
       return
     }
-
-    // Add your form submission logic here
     console.log('Form submitted:', formData)
     setSuccess('Your message has been sent successfully!')
     setFormData({ name: '', email: '', subject: '', message: '' })
