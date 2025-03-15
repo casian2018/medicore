@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
+import Nav from '@/components/nav'
+import Footer from '@/components/footer'
 interface Response {
     user: string;
     date: string;
@@ -41,8 +43,10 @@ export default function ForumPage() {
 
     return (
         <>
-             <div className="bg-gray-100 min-h-screen p-6">
-      <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 border border-gray-200">
+        <Nav />
+             <div className="bg-white min-h-screen p-6">
+                
+      <div className="max-w-3xl mx-auto bg-gray-50 shadow-md rounded-lg p-6 border border-gray-200 mt-20">
         {/* Forum Header */}
         <div className="flex items-center jus space-x-3 mb-4">
           <div className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -114,7 +118,7 @@ export default function ForumPage() {
         </div>
       </div>
     </div>
-                        
+                   <Footer />     
         </>
     );
 }
