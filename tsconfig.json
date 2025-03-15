@@ -17,7 +17,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/api/forum/[id]/response.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/api/forum/[id]/response.js", "src/pages/pages/VideoCallPage.jsx"],
   "exclude": ["node_modules"]
 }
 

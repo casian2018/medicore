@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Nav from '@/components/nav';
+import { join } from 'path';
+import Router from 'next/router';
+
 
 interface Call {
     recipientId: string;
@@ -8,7 +11,6 @@ interface Call {
     expiresAt: number;
     token: string;
 }
-
 const CallsPage: React.FC = () => {
     const [calls, setCalls] = useState<Call[]>([]);
     const [userType, setUserType] = useState<string | null>(null);
@@ -54,6 +56,20 @@ const CallsPage: React.FC = () => {
         );
     }
 
+    const joinCall = async () => {
+        // const response = await fetch('/api/agora/join', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({ channelName: calls[0].channelName }),
+        // });
+        // const data = await response.json();
+        // window.location.href = data.url;
+        // console.log(data);
+        Router.push(`/talk/${calls[0].recipientId}`);
+    };
+        
     return (
         <>
         <Nav />
@@ -64,7 +80,9 @@ const CallsPage: React.FC = () => {
                 <p className="text-lg font-semibold">Recipient ID: <span className="font-normal">{call.recipientId}</span></p>
                 <p className="text-lg font-semibold">User ID: <span className="font-normal">{call.userId}</span></p>
                 <p className="text-lg font-semibold">Expires At: <span className="font-normal">{new Date(call.expiresAt * 1000).toLocaleString()}</span></p>
-                <button className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-300">Join Call</button>
+                <button className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-300"
+                onClick={joinCall}
+                >Join Call</button>
                 </li>
             ))}
             </ul>

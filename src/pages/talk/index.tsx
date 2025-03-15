@@ -100,7 +100,6 @@ export default function Chat() {
       )}
 
       <div className="w-full max-w-lg mt-8">
-        <VideoCallPage />
       </div>
     </div>
   );

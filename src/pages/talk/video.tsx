@@ -6,7 +6,7 @@ const CHANNEL_NAME = "main";
 const UID = Math.floor(Math.random() * 10000);
 const PLACEHOLDER_IMAGE_URL = "/hero1.jpg"; // Replace with your image URL
 
-export default function VideoCallPage(): JSX.Element {
+export default function Video(): JSX.Element {
     const [agoraEngine, setAgoraEngine] = useState<any>(null);
     const [token, setToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
