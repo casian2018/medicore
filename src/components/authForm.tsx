@@ -13,7 +13,7 @@ export default function AuthForm({ variant }: AuthFormProps) {
   const alternativeText = isLogin 
     ? "Don't have an account?" 
     : "Already have an account?"
-  const alternativeLink = isLogin ? '/signup' : '/login'
+  const alternativeLink = isLogin ? '/pages/signup' : '/pages/login'
   const alternativeLinkText = isLogin ? 'Sign Up' : 'Login'
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -22,6 +22,11 @@ export default function AuthForm({ variant }: AuthFormProps) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const data = Object.fromEntries(formData.entries())
+
+    if (!isLogin && data.password !== data.confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
 
     try {
       const response = await fetch(isLogin ? '/api/auth/login' : '/api/auth/register', {
@@ -41,7 +46,7 @@ export default function AuthForm({ variant }: AuthFormProps) {
       if (isLogin) {
         router.push('/profile')
       } else {
-        router.push('/login')
+        router.push('/pages/login')
       }
     } catch (error: any) {
       setError(error.message)
@@ -54,18 +59,56 @@ export default function AuthForm({ variant }: AuthFormProps) {
       {error && <p className="text-black text-center mb-4">{error}</p>}
       <form className="space-y-6" onSubmit={handleSubmit}>
         {!isLogin && (
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-black">
-              Name
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
-            />
-          </div>
+          <>
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-black">
+                Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
+              />
+            </div>
+            <div>
+              <label htmlFor="surname" className="block text-sm font-medium text-black">
+                Surname
+              </label>
+              <input
+                id="surname"
+                name="surname"
+                type="text"
+                required
+                className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
+              />
+            </div>
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-black">
+                Username
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
+              />
+            </div>
+            <div>
+              <label htmlFor="dateOfBirth" className="block text-sm font-medium text-black">
+                Date of Birth
+              </label>
+              <input
+                id="dateOfBirth"
+                name="dateOfBirth"
+                type="date"
+                required
+                className="mt-1 block w-full rounded-lg border-red-200 bg-red-50/20 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-300 py-2 px-4 transition-all"
+              />
+            </div>
+          </>
         )}
         
         <div>
@@ -120,7 +163,7 @@ export default function AuthForm({ variant }: AuthFormProps) {
                   <input
                     type="radio"
                     id="patient"
-                    name="accountType"
+                    name="type"
                     value="patient"
                     required
                     className="h-4 w-4 text-red-600 focus:ring-red-500 border-red-200"
@@ -133,7 +176,7 @@ export default function AuthForm({ variant }: AuthFormProps) {
                   <input
                     type="radio"
                     id="doctor"
-                    name="accountType"
+                    name="type"
                     value="doctor"
                     required
                     className="h-4 w-4 text-red-600 focus:ring-red-500 border-red-200"

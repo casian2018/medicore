@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Nav from '@/components/nav';
 
 interface User {
     email: string;
@@ -7,6 +8,7 @@ interface User {
     username: string;
     dateOfBirth: string;
     dateCreated: string;
+    type:string;
 }
 
 export default function ProfilePage() {
@@ -50,6 +52,8 @@ export default function ProfilePage() {
     }
 
     return (
+        <>
+        <Nav />
         <div className="flex flex-col justify-center items-center h-[100vh] bg-gray-100 dark:bg-navy-900">
             <div className="relative flex flex-col items-center rounded-[20px] w-[700px] max-w-[95%] mx-auto bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none p-6">
                 <div className="mt-2 mb-8 w-full">
@@ -102,8 +106,15 @@ export default function ProfilePage() {
                             {user.dateCreated}
                         </p>
                     </div>
+                    <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Type</p>
+                        <p className="text-base font-medium text-red-600 dark:text-red-400">
+                            {user.type}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
+        </>
     );
 }

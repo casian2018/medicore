@@ -6,7 +6,7 @@ export default function LoginPage() {
   return (
     <main>
       <Nav />
-      <div className="min-h-screen pt-16 ">
+      <div className="min-h-screen pt-16">
         <AuthForm variant="login" />
       </div>
       <Footer />
