@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Nav from '@/components/nav';
-
+import Footer from '@/components/footer'
 interface User {
     email: string;
     name: string;
@@ -54,8 +54,8 @@ export default function ProfilePage() {
     return (
         <>
         <Nav />
-        <div className="flex flex-col justify-center items-center h-[100vh] bg-gray-100 dark:bg-navy-900">
-            <div className="relative flex flex-col items-center rounded-[20px] w-[700px] max-w-[95%] mx-auto bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none p-6">
+        <div className="flex flex-col justify-center items-center h-[100vh] bg-gray-100 dark:bg-navy-900 ">
+            <div className="relative flex flex-col items-center rounded-[20px] w-[700px] max-w-[95%] mx-auto bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none p-6 mt-40 mb-30">
                 <div className="mt-2 mb-8 w-full">
                     <h4 className="px-2 text-xl font-bold text-red-600 dark:text-red-400">
                         General Information
@@ -114,7 +114,9 @@ export default function ProfilePage() {
                     </div>
                 </div>
             </div>
+       
         </div>
+        <Footer />
         </>
     );
 }
