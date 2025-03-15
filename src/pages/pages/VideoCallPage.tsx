@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState, JSX } from "react";
+import { RingLoader } from "react-spinners";
+
 
 const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID as string;
 const CHANNEL_NAME = "main";
@@ -11,6 +13,12 @@ export default function VideoCallPage(): JSX.Element {
     const localVideoRef = useRef<HTMLDivElement>(null);
     const remoteVideoRef = useRef<HTMLDivElement>(null);
     const [joined, setJoined] = useState<boolean>(false);
+    const [localVideoTrack, setLocalVideoTrack] = useState<any>(null);
+    const [localAudioTrack, setLocalAudioTrack] = useState<any>(null);
+    const [isVideoEnabled, setIsVideoEnabled] = useState<boolean>(true);
+    const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(true);
+    const [isConnecting, setIsConnecting] = useState<boolean>(false);
+
 
     useEffect(() => {
         setIsLoading(true);
@@ -34,7 +42,24 @@ export default function VideoCallPage(): JSX.Element {
             });
         }
     }, []);
-
+    async function startCallLoad(): Promise<void> {
+                   try {
+                    setIsConnecting(true);
+                    
+                    if (!token) {
+                        setIsConnecting(false);
+                        return;
+                    }
+                }catch (error) {
+                    console.error("Error joining channel:", error);
+                    if (error instanceof Error) {
+                        alert(`Failed to join channel: ${error.message}`);
+                    } else {
+                        alert("Failed to join channel: An unknown error occurred");
+                    }
+                    setIsConnecting(false);
+                }
+    }
     async function startCall(): Promise<void> {
         try {
             // Request camera & microphone permissions
@@ -70,19 +95,56 @@ export default function VideoCallPage(): JSX.Element {
 
             await client.publish([localVideoTrack, localAudioTrack]);
             setJoined(true);
+            setIsConnecting(false);
         } catch (error) {
+
             console.error("Error joining channel:", error);
             if (error instanceof Error) {
                 alert(`Failed to join channel: ${error.message}`);
             } else {
                 alert("Failed to join channel: An unknown error occurred");
             }
+            setIsConnecting(false);
+
+        }
+    }
+
+    function toggleVideo(): void {
+        if (localVideoTrack) {
+            if (isVideoEnabled) {
+                localVideoTrack.setEnabled(false);
+            } else {
+                localVideoTrack.setEnabled(true);
+            }
+            setIsVideoEnabled(!isVideoEnabled);
+        }
+    }
+
+    function toggleAudio(): void {
+        if (localAudioTrack) {
+            if (isAudioEnabled) {
+                localAudioTrack.setEnabled(false);
+            } else {
+                localAudioTrack.setEnabled(true);
+            }
+            setIsAudioEnabled(!isAudioEnabled);
+        }
+    }
+
+    async function leaveCall(): Promise<void> {
+        if (agoraEngine) {
+            await agoraEngine.leave();
+            localVideoTrack?.close();
+            localAudioTrack?.close();
+            setLocalVideoTrack(null);
+            setLocalAudioTrack(null);
+            setJoined(false);
         }
     }
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-white text-black">
-            <h1 className="text-3xl font-bold mb-4 text-red-600">Video Call</h1>
+        <div className="flex flex-col items-center justify-center h-screen bg-gray-100 text-black">
+            <h1 className="text-4xl font-bold mb-6 text-red-600">Video Call</h1>
             <div className="grid grid-cols-2 gap-4 p-4 border border-gray-300 rounded-lg">
                 <div ref={localVideoRef} className="w-64 h-48 bg-gray-200 relative">
                     {!joined && <div className="absolute inset-0 flex items-center justify-center text-gray-500">Local Video</div>}
@@ -91,7 +153,6 @@ export default function VideoCallPage(): JSX.Element {
                     {!joined && <div className="absolute inset-0 flex items-center justify-center text-gray-500">Remote Video</div>}
                 </div>
             </div>
-            
             <div className="mt-6">
                 {isLoading ? (
                     <button className="bg-gray-300 px-6 py-2 rounded-lg" disabled>
@@ -101,10 +162,19 @@ export default function VideoCallPage(): JSX.Element {
                     <button className="bg-red-600 px-6 py-2 rounded-lg" disabled>
                         Token Error
                     </button>
+): isConnecting ? (
+    <div className="flex items-center gap-2">
+        <RingLoader color="#000000" className="w-4 h-4" />
+        <span className="text-gray-600">Connecting...</span>
+    </div>
                 ) : !joined ? (
                     <button 
-                        onClick={startCall}
+                        onClick={() => {
+                            startCall();
+                            startCallLoad();
+                        }}
                         className="bg-red-600 hover:bg-red-500 px-6 py-2 rounded-lg text-white"
+                        disabled={isConnecting}
                     >
                         Join Call
                     </button>
