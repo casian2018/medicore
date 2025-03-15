@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Nav from '@/components/nav';
-import Footer from '@/components/footer'
+import Footer from '@/components/footer';
+
 interface User {
     email: string;
     name: string;
@@ -8,7 +9,7 @@ interface User {
     username: string;
     dateOfBirth: string;
     dateCreated: string;
-    type:string;
+    type: string;
 }
 
 export default function ProfilePage() {
@@ -53,70 +54,46 @@ export default function ProfilePage() {
 
     return (
         <>
-        <Nav />
-        <div className="flex flex-col justify-center items-center h-[100vh] bg-gray-100 dark:bg-navy-900 ">
-            <div className="relative flex flex-col items-center rounded-[20px] w-[700px] max-w-[95%] mx-auto bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none p-6 mt-40 mb-30">
-                <div className="mt-2 mb-8 w-full">
-                    <h4 className="px-2 text-xl font-bold text-red-600 dark:text-red-400">
-                        General Information
-                    </h4>
-                    <p className="mt-2 px-2 text-base text-gray-600 dark:text-gray-300">
-                        Medicine is the science and practice of caring for a patient, managing the diagnosis, prognosis, prevention, treatment, and palliation of their injury or disease. It encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness.
-                    </p>
-                </div>
-                <div className="grid grid-cols-2 gap-4 px-2 w-full">
-                    <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Email</p>
-                        <p className="text-base font-medium text-red-600 dark:text-red-400">
-                            {user.email}
+            <Nav />
+            <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 py-10">
+                <div className="relative flex flex-col items-center rounded-2xl w-full max-w-4xl mx-auto bg-white bg-clip-border shadow-lg p-8">
+                    <div className="w-full mb-8">
+                        <h4 className="text-2xl font-bold text-red-600 mt-8">
+                            General Information
+                        </h4>
+                        <p className="text-base text-gray-600">
+                            Medicine is the science and practice of caring for a patient, managing the diagnosis, prognosis, prevention, treatment, and palliation of their injury or disease. It encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness.
                         </p>
                     </div>
-
-                    <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Name</p>
-                        <p className="text-base font-medium text-red-600 dark:text-red-400">
-                            {user.name}
-                        </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                        {[
+                            { label: 'Email', value: user.email },
+                            { label: 'Name', value: user.name },
+                            { label: 'Surname', value: user.surname },
+                            { label: 'Username', value: user.username },
+                            { label: 'Date of Birth', value: user.dateOfBirth },
+                            { label: 'Date Created', value: user.dateCreated },
+                            { label: 'Type', value: user.type },
+                        ].map((item, index) => (
+                            <div key={index} className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-4 py-6 shadow-md">
+                                <p className="text-sm text-gray-600">{item.label}</p>
+                                <p className="text-base font-medium text-red-600">
+                                    {item.value}
+                                </p>
+                            </div>
+                        ))}
                     </div>
-
-                    <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Surname</p>
-                        <p className="text-base font-medium text-red-600 dark:text-red-400">
-                            {user.surname}
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Username</p>
-                        <p className="text-base font-medium text-red-600 dark:text-red-400">
-                            {user.username}
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Date of Birth</p>
-                        <p className="text-base font-medium text-red-600 dark:text-red-400">
-                            {user.dateOfBirth}
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Date Created</p>
-                        <p className="text-base font-medium text-red-600 dark:text-red-400">
-                            {user.dateCreated}
-                        </p>
-                    </div>
-                    <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Type</p>
-                        <p className="text-base font-medium text-red-600 dark:text-red-400">
-                            {user.type}
-                        </p>
-                    </div>
+                    {user.type === 'doctor' && (
+                        <button 
+                            className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md"
+                            onClick={() => window.location.href = '/calls'}
+                        >
+                            Answer some calls
+                        </button>
+                    )}
                 </div>
             </div>
-       
-        </div>
-        <Footer />
+            <Footer />
         </>
     );
 }
