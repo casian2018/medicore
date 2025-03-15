@@ -123,7 +123,7 @@ const Forum = () => {
                             <div className="fixed bottom-8 right-8 z-30">
                                 <button 
                                     onClick={() => router.push('/forum/addPost')}
-                                    className="bg-[#FF4500] text-white font-medium px-6 py-3 rounded-full text-sm hover:bg-[#ff5414] transition-colors shadow-lg flex items-center"
+                                    className="bg-red-600 text-white font-medium px-6 py-3 rounded-full text-sm hover:bg-red-700 transition-colors shadow-lg flex items-center"
                                 >
                                     <span className="lg:hidden">+</span>
                                     <span className="hidden lg:inline">Create Post</span>
