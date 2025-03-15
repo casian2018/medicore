@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
@@ -13,6 +13,10 @@ interface ForumPost {
   timestamp: Date;
 }
 
+interface User {
+  type: string;
+}
+
 export default function DoctorForum() {
   const [newPost, setNewPost] = useState({
     author: "",
@@ -22,6 +26,22 @@ export default function DoctorForum() {
     image: "",
   });
   const [posts, setPosts] = useState<ForumPost[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // Fetch user data
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/api/user");
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleSubmitPost = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +83,32 @@ export default function DoctorForum() {
       console.error("Error submitting post:", error);
     }
   };
+
+  if (user === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (user.type !== "doctor") {
+    return (
+      <main>
+        <Nav />
+        <div className="max-w-4xl mx-auto p-6 min-h-screen flex flex-col justify-center items-center">
+          <h1 className="text-3xl font-bold mb-8 text-center text-black">
+            Access Denied
+          </h1>
+          <p className="text-lg text-center text-black mb-4">
+            You do not have permission to access this page.
+          </p>
+          <Link href="/">
+            <a className="py-2 px-6 rounded-lg shadow-sm text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors duration-200">
+              Go Back to Main
+            </a>
+          </Link>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
 
   return (
     <main>

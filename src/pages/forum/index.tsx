@@ -24,11 +24,20 @@ const Forum = () => {
         { _id: string; title: string; content: string; profilePic: string }[]
     >([]);
     const [loading, setLoading] = useState(false);
+    const [userType, setUserType] = useState<string | null>(null);
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
     useEffect(() => {
-        if (selectedTag) {
+        fetch('/api/profile/user')
+            .then((res) => res.json())
+            .then((data) => {
+                setUserType(data.type);
+            });
+    }, []);
+
+    useEffect(() => {
+        if (selectedTag && userType === 'doctor') {
             setLoading(true);
             setTimeout(() => {
                 fetch(`/api/forum/posts?tag=${selectedTag}`)
@@ -44,7 +53,22 @@ const Forum = () => {
                     });
             }, 500);
         }
-    }, [selectedTag]);
+    }, [selectedTag, userType]);
+
+    if (userType !== 'doctor') {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+                <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
+                <p className="text-gray-700 mb-4">You do not have permission to access this forum.</p>
+                <button
+                    onClick={() => router.push('/')}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md"
+                >
+                    Go Back
+                </button>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -78,7 +102,7 @@ const Forum = () => {
                             />
                         </div>
                         <div className="py-2">
-                            {tags.map((tag) => (
+                            {tags.map((tag: string) => (
                                 <div
                                     key={tag}
                                     role="button"
@@ -87,7 +111,7 @@ const Forum = () => {
                                         setSelectedTag(tag);
                                         setIsSidebarOpen(false);
                                     }}
-                                    onKeyDown={(e) => e.key === "Enter" && setSelectedTag(tag)}
+                                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => e.key === "Enter" && setSelectedTag(tag)}
                                     className={`px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors rounded-md my-1 mx-2 ${
                                         selectedTag === tag
                                             ? "bg-blue-50 border-l-4 border-red-600 font-medium text-gray-900"
@@ -121,7 +145,7 @@ const Forum = () => {
                                 </div>
                             ) : posts.length > 0 ? (
                                 <div className="space-y-4 pb-16">
-                                    {posts.map((post) => (
+                                    {posts.map((post: { _id: string; title: string; content: string; profilePic: string }) => (
                                         <div
                                             key={post._id}
                                             className="bg-gray-50 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md"
