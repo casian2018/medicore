@@ -3,7 +3,6 @@ import { useEffect, useRef, useState, JSX } from "react";
 const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID as string;
 const CHANNEL_NAME = "main";
 const UID = Math.floor(Math.random() * 10000);
-const PLACEHOLDER_IMAGE_URL = "/hero1.jpg"; // Replace with your image URL
 
 export default function VideoCallPage(): JSX.Element {
     const [agoraEngine, setAgoraEngine] = useState<any>(null);
@@ -12,10 +11,6 @@ export default function VideoCallPage(): JSX.Element {
     const localVideoRef = useRef<HTMLDivElement>(null);
     const remoteVideoRef = useRef<HTMLDivElement>(null);
     const [joined, setJoined] = useState<boolean>(false);
-    const [localVideoTrack, setLocalVideoTrack] = useState<any>(null);
-    const [localAudioTrack, setLocalAudioTrack] = useState<any>(null);
-    const [isVideoEnabled, setIsVideoEnabled] = useState<boolean>(true);
-    const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(true);
 
     useEffect(() => {
         setIsLoading(true);
@@ -67,15 +62,13 @@ export default function VideoCallPage(): JSX.Element {
             console.log("Successfully joined channel");
 
             const AgoraRTC = await import("agora-rtc-sdk-ng");
-            const videoTrack = await AgoraRTC.default.createCameraVideoTrack();
-            const audioTrack = await AgoraRTC.default.createMicrophoneAudioTrack();
-            setLocalVideoTrack(videoTrack);
-            setLocalAudioTrack(audioTrack);
+            const localVideoTrack = await AgoraRTC.default.createCameraVideoTrack();
+            const localAudioTrack = await AgoraRTC.default.createMicrophoneAudioTrack();
             if (localVideoRef.current) {
-                videoTrack.play(localVideoRef.current);
+                localVideoTrack.play(localVideoRef.current);
             }
 
-            await client.publish([videoTrack, audioTrack]);
+            await client.publish([localVideoTrack, localAudioTrack]);
             setJoined(true);
         } catch (error) {
             console.error("Error joining channel:", error);
@@ -87,45 +80,15 @@ export default function VideoCallPage(): JSX.Element {
         }
     }
 
-    function toggleVideo(): void {
-        if (localVideoTrack) {
-            if (isVideoEnabled) {
-                localVideoTrack.setEnabled(false);
-            } else {
-                localVideoTrack.setEnabled(true);
-            }
-            setIsVideoEnabled(!isVideoEnabled);
-        }
-    }
-
-    function toggleAudio(): void {
-        if (localAudioTrack) {
-            if (isAudioEnabled) {
-                localAudioTrack.setEnabled(false);
-            } else {
-                localAudioTrack.setEnabled(true);
-            }
-            setIsAudioEnabled(!isAudioEnabled);
-        }
-    }
-
-    async function leaveCall(): Promise<void> {
-        if (agoraEngine) {
-            await agoraEngine.leave();
-            setJoined(false);
-            setLocalVideoTrack(null);
-            setLocalAudioTrack(null);
-        }
-    }
-
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100 text-black">
-            <h1 className="text-4xl font-bold mb-6 text-red-600">Video Call</h1>
-            <div className="grid grid-cols-2 gap-6 p-6 border border-gray-300 rounded-lg bg-white shadow-lg">
+        <div className="flex flex-col items-center justify-center h-screen bg-white text-black">
+            <h1 className="text-3xl font-bold mb-4 text-red-600">Video Call</h1>
+            <div className="grid grid-cols-2 gap-4 p-4 border border-gray-300 rounded-lg">
                 <div ref={localVideoRef} className="w-64 h-48 bg-gray-200 relative">
-                    {!isVideoEnabled && (
-                        <img src={PLACEHOLDER_IMAGE_URL} alt="Placeholder" className="absolute inset-0 w-full h-full object-cover" />
-                    )}
+                    {!joined && <div className="absolute inset-0 flex items-center justify-center text-gray-500">Local Video</div>}
+                </div>
+                <div ref={remoteVideoRef} className="w-64 h-48 bg-gray-200 relative">
+                    {!joined && <div className="absolute inset-0 flex items-center justify-center text-gray-500">Remote Video</div>}
                 </div>
             </div>
             
@@ -146,29 +109,7 @@ export default function VideoCallPage(): JSX.Element {
                         Join Call
                     </button>
                 ) : (
-                    <div className="flex flex-col items-center">
-                        <p className="text-green-600 mb-4">Connected</p>
-                        <div className="flex space-x-4">
-                            <button 
-                                onClick={toggleVideo}
-                                className={`px-6 py-2 rounded-lg text-white ${isVideoEnabled ? 'bg-red-600 hover:bg-red-500' : 'bg-gray-600 hover:bg-gray-500'}`}
-                            >
-                                {isVideoEnabled ? 'Turn Off Camera' : 'Turn On Camera'}
-                            </button>
-                            <button 
-                                onClick={toggleAudio}
-                                className={`px-6 py-2 rounded-lg text-white ${isAudioEnabled ? 'bg-red-600 hover:bg-red-500' : 'bg-gray-600 hover:bg-gray-500'}`}
-                            >
-                                {isAudioEnabled ? 'Turn Off Microphone' : 'Turn On Microphone'}
-                            </button>
-                            <button 
-                                onClick={leaveCall}
-                                className="bg-red-600 hover:bg-red-500 px-6 py-2 rounded-lg text-white"
-                            >
-                                Leave Call
-                            </button>
-                        </div>
-                    </div>
+                    <p className="text-green-600">Connected</p>
                 )}
             </div>
             
