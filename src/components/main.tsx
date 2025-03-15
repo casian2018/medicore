@@ -3,8 +3,8 @@ import router from 'next/router';
 
 const Main = () => {
   return (
-    <main className="bg-white flex justify-center items-center px-4 sm:px-6 lg:px-8 pt-20 md:pt-0"> {/* Added responsive padding */}
-      <div className="max-w-7xl mx-auto px-4 py-12 md:py-20 flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16">
+    <main className="bg-white flex justify-center items-center px-4 sm:px-6 lg:px-8 pt-20 md:pt-0 mb-25">
+           <div className="max-w-7xl mx-auto px-4 py-12 md:py-20 flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16">
         <div className="md:w-1/2 text-center md:text-left space-y-4">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
             Welcome to <span className="text-red-600">MediCore</span>
