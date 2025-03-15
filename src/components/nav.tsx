@@ -1,56 +1,58 @@
-import Link from 'next/link';
-
 export default function Nav() {
-  return (
-    <>
-      <nav id="header" className="w-full z-30 top-10 py-1 bg-white shadow-lg border-b border-red-400 mb-5">
-        <div className="w-full flex items-centre justify-between mt-0 px-6 py-2">
-          <label className="cursor-pointer md:hidden block">
-            <svg className="fill-current text-red-600" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-              <title>menu</title>
-              <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
-            </svg>
-          </label>
-          <input className="hidden" type="checkbox" id="menu-toggle" />
-          <div className="hidden md:flex md:items-center md:w-auto w-full order-3 md:order-1" id="menu">
-            <nav>
-              <ul className="md:flex items-center justify-between text-base text-black-600 pt-4 md:pt-0">
-                <li>
-                  <Link href="/" className="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/forum" className="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2">
-                    Forum
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2">
-                    About
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div className="order-2 md:order-3 flex flex-wrap items-center justify-end mr-0 md:mr-4" id="nav-content">
-            <div className="auth flex items-center w-full md:w-full">
-              <Link
-                href="/login"
-                className="bg-transparent text-gray-800 p-2 rounded border border-gray-300 mr-4 hover:bg-gray-100 hover:text-gray-700"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/signup"
-                className="bg-red-600 text-gray-200 p-2 rounded hover:bg-red-700 hover:text-gray-100"
-              >
-                Sign up
-              </Link>
+   return (
+      <nav className="bg-white border-gray-200 py-2.5 fixed w-full">
+         <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
+            <a href="#" className="flex items-center">
+               <span className="self-center text-xl font-semibold whitespace-nowrap"><img src="/logo.png" alt="" width={75}/></span>
+            </a>
+            <div className="flex items-center lg:order-2">
+               <div className="hidden mt-2 mr-4 sm:inline-block">
+                  <span></span>
+               </div>
+
+               <a href="https://themesberg.com/product/tailwind-css/landing-page"
+                  className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 focus:outline-none ">Sign In</a>
+               <button data-collapse-toggle="mobile-menu-2" type="button"
+                  className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                  aria-controls="mobile-menu-2" aria-expanded="true">
+                  <span className="sr-only">Open main menu</span>
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                     <path fillRule="evenodd"
+                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                        clipRule="evenodd"></path>
+                  </svg>
+                  <svg className="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                     <path fillRule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clipRule="evenodd"></path>
+                  </svg>
+               </button>
             </div>
-          </div>
-        </div>
+            <div className="items-center justify-between w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
+               <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                  <li>
+                     <a href="#"
+                        className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-red-700 lg:p-0 ">Home</a>
+                  </li>
+                  <li>
+                     <a href="#"
+                        className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-red-700 lg:p-0 ">About</a>
+                  </li>
+                  <li>
+                     <a href="#"
+                        className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-red-700 lg:p-0 ">Forum</a>
+                  </li>
+                  <li>
+                     <a href="#"
+                        className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-red-700 lg:p-0">Features</a>
+                  </li>
+                  <li>
+                     <a href="#"
+                        className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-red-700 lg:p-0 ">Contact</a>
+                  </li>
+               </ul>
+            </div>
+         </div>
       </nav>
-    </>
-  );
+   );
 }
