@@ -4,8 +4,16 @@ import { FaArrowUp, FaArrowDown, FaComment, FaBars, FaTimes, FaPlus } from "reac
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
 
+interface Post {
+    _id: string;
+    title: string;
+    content: string;
+    profilePic: string;
+    responses: any[];  // Added responses field to the interface
+}
+
 const Forum = () => {
-    const router = useRouter();
+    const router = useRouter(); 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [tags] = useState([
         "Neuro",
@@ -20,9 +28,7 @@ const Forum = () => {
         "Hematology",
     ]);
     const [selectedTag, setSelectedTag] = useState(tags[0]);
-    const [posts, setPosts] = useState<
-        { _id: string; title: string; content: string; profilePic: string }[]
-    >([]);
+    const [posts, setPosts] = useState<Post[]>([]);  // Updated type definition
     const [loading, setLoading] = useState(false);
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -140,61 +146,62 @@ const Forum = () => {
                                 </div>
                             ) : posts.length > 0 ? (
                                 <div className="space-y-4 pb-16">
-                                    {posts.map((post) => (
-                                        <div
-                                            key={post._id}
-                                            className="bg-white rounded-xl shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer group border border-gray-100"
-                                            onClick={() => router.push(`/forum/page/${post._id}`)}
-                                            role="button"
-                                            tabIndex={0}
-                                            onKeyDown={(e) => e.key === "Enter" && router.push(`/forum/page/${post._id}`)}
-                                        >
-                                            <div className="flex p-4">
-                                                {/* Voting buttons */}
-                                                <div className="flex flex-col items-center mr-4">
-                                                    <button
-                                                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                        aria-label="Upvote post"
-                                                    >
-                                                        <FaArrowUp size={18} />
-                                                    </button>
-                                                    <span className="text-sm font-medium my-1 text-center text-gray-700">0</span>
-                                                    <button
-                                                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                        aria-label="Downvote post"
-                                                    >
-                                                        <FaArrowDown size={18} />
-                                                    </button>
-                                                </div>
+                                     {posts.map((post) => (
+        <div
+            key={post._id}
+            className="bg-white rounded-xl shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer group border border-gray-100"
+            onClick={() => router.push(`/forum/page/${post._id}`)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && router.push(`/forum/page/${post._id}`)}
+        >
+            <div className="flex p-4">
+                {/* Voting buttons */}
+                <div className="flex flex-col items-center mr-4">
+                    <button
+                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        aria-label="Upvote post"
+                    >
+                        <FaArrowUp size={18} />
+                    </button>
+                    <span className="text-sm font-medium my-1 text-center text-gray-700">0</span>
+                    <button
+                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        aria-label="Downvote post"
+                    >
+                        <FaArrowDown size={18} />
+                    </button>
+                </div>
 
-                                                {/* Post content */}
-                                                <div className="flex-1">
-                                                    <div className="flex items-center mb-3">
-                                                        <img
-                                                            src={post.profilePic}
-                                                            alt="User Profile"
-                                                            className="h-8 w-8 rounded-full object-cover mr-3 flex-shrink-0"
-                                                        />
-                                                        <span className="text-sm text-gray-600">
-                                                            Posted by <span className="text-gray-900 font-medium hover:underline">Anonymous</span> • 1h
-                                                        </span>
-                                                    </div>
-                                                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{post.title}</h3>
-                                                    <div className="text-gray-700 mb-3 leading-relaxed">
-                                                        {post.content.length > 250 ? 
-                                                            post.content.substring(0, 250) + "..." : 
-                                                            post.content}
-                                                    </div>
-                                                    <div className="flex items-center text-gray-600 text-sm">
-                                                        <div className="flex items-center mr-4 hover:bg-gray-100 px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
-                                                            <FaComment className="mr-2 text-red-600" />
-                                                            <span>0 Comments</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                {/* Post content */}
+                <div className="flex-1">
+                    <div className="flex items-center mb-3">
+                        <img
+                            src={post.profilePic}
+                            alt="User Profile"
+                            className="h-8 w-8 rounded-full object-cover mr-3 flex-shrink-0"
+                        />
+                        <span className="text-sm text-gray-600">
+                            Posted by <span className="text-gray-900 font-medium hover:underline">Anonymous</span> • 1h
+                        </span>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{post.title}</h3>
+                    <div className="text-gray-700 mb-3 leading-relaxed">
+                        {post.content.length > 250 ? 
+                            post.content.substring(0, 250) + "..." : 
+                            post.content}
+                    </div>
+                    <div className="flex items-center text-gray-600 text-sm">
+                        <div className="flex items-center mr-4 hover:bg-gray-100 px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
+                            <FaComment className="mr-2 text-red-600" />
+                            {/* Updated comment count display */}
+                            <span>{post.responses.length} Comments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ))}
                                 </div>
                             ) : (
                                 <div className="bg-white rounded-xl shadow p-8 text-center border border-gray-100">
