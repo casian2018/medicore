@@ -81,7 +81,7 @@ const contactSpecialist = () => {
     <div className="flex flex-col items-center min-h-screen bg-white text-black p-6">
       <h1 className="text-2xl font-bold mb-6 text-red-600">Hey,</h1>
       <div className="w-full max-w-lg p-4 bg-gray-100 rounded-lg shadow-md">
-        <p className="mb-2 text-gray-700">{response || "Loading question..."}</p>
+        {response || questions[step]}
         <textarea
           className="w-full p-2 rounded-md bg-white text-black border border-gray-300 focus:outline-none"
           rows={3}

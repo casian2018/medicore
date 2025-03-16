@@ -29,7 +29,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    const result = await model.generateContent(message);
+    const prompt = `You are a helpful medical assistant. Please provide detailed and accurate information based on the following message: "${message}"`;
+    const result = await model.generateContent(prompt);
     const response = result.response;
     const text = formatResponse(response.text());
 
