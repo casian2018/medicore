@@ -86,7 +86,7 @@ export default function ProfilePage() {
                     {user.type === 'doctor' && (
                         <button 
                             className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md"
-                            onClick={() => window.location.href = '/talk'}
+                            onClick={() => window.location.href = '/talk/video'}
                         >
                             Answer some calls
                         </button>
