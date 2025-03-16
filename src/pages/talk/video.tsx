@@ -1,12 +1,14 @@
 import { JSX, useEffect, useRef, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
+import Nav from '@/components/nav'
 
 const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID as string;
 const CHANNEL_NAME = "main";
 const UID = Math.floor(Math.random() * 10000);
-const PLACEHOLDER_IMAGE_URL = "/hero1.jpg"; // Replace with your image URL
+const PLACEHOLDER_IMAGE_URL = "/hero1.jpg";
 
 export default function Video(): JSX.Element {
+
     const [agoraEngine, setAgoraEngine] = useState<any>(null);
     const [token, setToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -141,74 +143,99 @@ export default function Video(): JSX.Element {
             setLocalAudioTrack(null);
         }
     }
-
-    return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100 text-black">
-            <h1 className="text-4xl font-bold mb-6 text-red-600">Video Call</h1>
-            <div className="grid grid-cols-2 gap-6 p-6 border border-gray-300 rounded-lg bg-white shadow-lg">
-                <div ref={localVideoRef} className="w-64 h-48 bg-gray-200 relative">
-                    {!isVideoEnabled && (
-                        <img src={PLACEHOLDER_IMAGE_URL} alt="Placeholder" className="absolute inset-0 w-full h-full object-cover" />
-                    )}
-                </div>
-            </div>
-            
-            <div className="mt-6">
-                {isLoading ? (
-                    <button className="bg-gray-300 px-6 py-2 rounded-lg" disabled>
-                        
-                        Loading...
-                    </button>
-                ) : !token ? (
-                    <button className="bg-red-600 px-6 py-2 rounded-lg" disabled>
-                        Token Error
-                    </button>
-                 ) : !joined ? (
-                    isConnecting ? (
-                        <CgSpinner className="animate-spin text-red-600 text-3xl" />
-                    ) : (
-                        <button 
-                            onClick={startCall}
-                            className="bg-red-600 hover:bg-red-500 px-6 py-2 rounded-lg text-white"
-                        >
-                            Join Call
-                        </button>
-                    )
-                ):(
-                    <div className="flex flex-col items-center">
-                        <p className="text-green-600 mb-4">Connected</p>
-                        <div className="flex space-x-4">
-                            <button 
-                                onClick={toggleVideo}
-                                className={`px-6 py-2 rounded-lg text-white ${isVideoEnabled ? 'bg-red-600 hover:bg-red-500' : 'bg-gray-600 hover:bg-gray-500'}`}
-                            >
-                                {isVideoEnabled ? 'Turn Off Camera' : 'Turn On Camera'}
-                            </button>
-                            <button 
-                                onClick={toggleAudio}
-                                className={`px-6 py-2 rounded-lg text-white ${isAudioEnabled ? 'bg-red-600 hover:bg-red-500' : 'bg-gray-600 hover:bg-gray-500'}`}
-                            >
-                                {isAudioEnabled ? 'Turn Off Microphone' : 'Turn On Microphone'}
-                            </button>
-                            <button 
-                                onClick={leaveCall}
-                                className="bg-red-600 hover:bg-red-500 px-6 py-2 rounded-lg text-white"
-                            >
-                                Leave Call
-                            </button>
+        return (
+            <div className="flex flex-col min-h-screen bg-gray-100">
+                <Nav />
+                
+                <main className="flex-1 container mx-auto px-4 py-8">
+                    <h1 className="text-4xl font-bold mb-8 text-center text-red-600">Video Call</h1>
+                    
+                    <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-2xl p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                            {/* Local Video */}
+                            <div className="relative bg-gray-800 rounded-xl overflow-hidden aspect-video">
+                                <div ref={localVideoRef} className="w-full h-full">
+                                    {!isVideoEnabled && (
+                                        <img src={PLACEHOLDER_IMAGE_URL} alt="Placeholder" 
+                                             className="absolute inset-0 w-full h-full object-cover" />
+                                    )}
+                                </div>
+                                <div className="absolute bottom-2 left-2 text-white text-sm bg-black/50 px-3 py-1 rounded-full">
+                                    You
+                                </div>
+                            </div>
+    
+                            {/* Remote Video */}
+                            <div className="relative bg-gray-800 rounded-xl overflow-hidden aspect-video">
+                                <div ref={remoteVideoRef} className="w-full h-full" />
+                                <div className="absolute bottom-2 left-2 text-white text-sm bg-black/50 px-3 py-1 rounded-full">
+                                    Participant
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div className="text-center">
+                            {isLoading ? (
+                                <button className="bg-gray-300 px-6 py-3 rounded-xl" disabled>
+                                    Loading...
+                                </button>
+                            ) : !token ? (
+                                <button className="bg-red-600 px-6 py-3 rounded-xl" disabled>
+                                    Token Error
+                                </button>
+                            ) : !joined ? (
+                                isConnecting ? (
+                                    <CgSpinner className="animate-spin text-red-600 text-4xl mx-auto" />
+                                ) : (
+                                    <button 
+                                        onClick={startCall}
+                                        className="bg-red-600 hover:bg-red-700 px-8 py-3 rounded-xl text-white text-lg font-semibold transition-all"
+                                    >
+                                        Join Call
+                                    </button>
+                                )
+                            ) : (
+                                <div className="flex flex-col items-center space-y-4">
+                                    <p className="text-green-600 font-medium">Connected to {CHANNEL_NAME}</p>
+                                    <div className="flex flex-wrap gap-4 justify-center">
+                                        <button 
+                                            onClick={toggleVideo}
+                                            className={`px-6 py-3 rounded-xl text-white font-medium transition-all ${
+                                                isVideoEnabled ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-600 hover:bg-gray-700'
+                                            }`}
+                                        >
+                                            {isVideoEnabled ? 'Disable Camera' : 'Enable Camera'}
+                                        </button>
+                                        <button 
+                                            onClick={toggleAudio}
+                                            className={`px-6 py-3 rounded-xl text-white font-medium transition-all ${
+                                                isAudioEnabled ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-600 hover:bg-gray-700'
+                                            }`}
+                                        >
+                                            {isAudioEnabled ? 'Mute Mic' : 'Unmute Mic'}
+                                        </button>
+                                        <button 
+                                            onClick={leaveCall}
+                                            className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl text-white font-medium transition-all"
+                                        >
+                                            End Call
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+    
+                        <div className="mt-6 text-center text-sm text-gray-600">
+                            {isLoading ? (
+                                "Initializing..."
+                            ) : token ? (
+                                `Connected to channel: ${CHANNEL_NAME}`
+                            ) : (
+                                "Error connecting to service"
+                            )}
                         </div>
                     </div>
-                )}
+                </main>
             </div>
-            <div className="mt-4 text-sm text-gray-600">
-                {isLoading ? (
-                    "Loading token..."
-                ) : token ? (
-                    `Token loaded. Channel: ${CHANNEL_NAME}`
-                ) : (
-                    "Failed to load token. Check API endpoint."
-                )}
-            </div>
-        </div>
-    );
-}
+        );
+    }
