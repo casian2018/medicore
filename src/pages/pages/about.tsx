@@ -157,8 +157,8 @@ export default function AboutUs() {
                     <h3 className="font-semibold text-gray-900 mb-2 sm:mb-4 text-base sm:text-lg">Visit Us</h3>
                     <p className="text-gray-600 text-sm sm:text-base">
                       Medicore Headquarters<br />
-                      Timisoara Tech Park<br />
-                      Timisoara, Romania 300594
+                      Timisoara UBC 0<br />
+                      Timisoara, Romania 300627
                     </p>
                   </div>
                 </div>
