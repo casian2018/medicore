@@ -1,6 +1,7 @@
 import { JSX, useEffect, useRef, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import Nav from '@/components/nav'
+import Footer from '@/components/footer'
 
 const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID as string;
 const CHANNEL_NAME = "main";
@@ -144,6 +145,7 @@ export default function Video(): JSX.Element {
         }
     }
         return (
+            <div>
             <div className="flex flex-col min-h-screen bg-gray-100">
                 <Nav />
                 
@@ -234,8 +236,12 @@ export default function Video(): JSX.Element {
                                 "Error connecting to service"
                             )}
                         </div>
+                        
                     </div>
+                    
                 </main>
+                
             </div>
-        );
+            <Footer />
+</div>        );
     }
