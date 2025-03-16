@@ -83,41 +83,96 @@ export default function Chat() {
     router.push("/talk/video");
   };
 
+ 
   return (
     <>
-    <Nav />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-white text-black p-6 pt-24">
-        <div className="w-full max-w-lg p-4 bg-gray-100 rounded-lg shadow-md">
-          {response || questions[step]}
-          <textarea
-        className="w-full p-2 rounded-md bg-white text-black border border-gray-300 focus:outline-none"
-        rows={3}
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your response..."
-          />
-          <button
-        onClick={sendMessage}
-        disabled={loading}
-        className="mt-3 w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-md transition disabled:bg-gray-500"
-          >
-        {loading
-          ? "Thinking..."
-          : step < questions.length - 1
-          ? "Next"
-          : "Send"}
-          </button>
-          {step >= questions.length - 1 && (
-        <button
-          onClick={() => {
-            contactSpecialist();
-            saveResponse();
-          }}
-          className="mt-3 w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-md transition"
-        >
-          Contact Specialist
-        </button>
-          )}
+      <Nav />
+      <div className="flex flex-col items-center min-h-screen bg-gray-50 text-gray-800 p-6 pt-24">
+        <div className="w-full max-w-2xl space-y-6">
+          <h1 className="text-3xl font-bold text-red-600 text-center mb-8">
+            Medical Assessment Chat
+          </h1>
+
+          <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+            {/* Chat History */}
+            <div className="min-h-[200px] max-h-[70vh] overflow-y-auto ...">
+              {chatHistory.map((chat, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex justify-start">
+                    <div className="max-w-[85%] bg-red-50 p-4 rounded-xl">
+                      <p className="font-medium text-red-600">Question {index + 1}</p>
+                      <p className="text-gray-700">{chat.question}</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <div className="max-w-[85%] bg-gray-100 p-4 rounded-xl">
+                      <p className="font-medium text-gray-600">Your Response</p>
+                      <p className="text-gray-800">{chat.answer}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {response && (
+                <div className="bg-green-50 p-4 rounded-xl border border-green-200">
+                  <p className="font-medium text-green-600 mb-2">Medical Analysis:</p>
+                  <p className="text-gray-800 whitespace-pre-wrap">{response}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Current Question */}
+            {!response && (
+              <div className="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                <p className="font-medium text-blue-600 mb-2">
+                  Question {step + 1} of {questions.length}
+                </p>
+                <p className="text-gray-800">{questions[step]}</p>
+              </div>
+            )}
+
+            {/* Input Area */}
+            <div className="space-y-4">
+              <textarea
+                className="w-full p-4 rounded-lg border border-gray-200 focus:border-red-300 focus:ring-2 focus:ring-red-200 transition-all outline-none"
+                rows={3}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your response here..."
+              />
+
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={sendMessage}
+                  disabled={loading}
+                  className="w-full bg-red-600 hover:bg-red-500 text-white py-3 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                >
+                  {loading ? (
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  ) : step < questions.length - 1 ? (
+                    "Next Question →"
+                  ) : (
+                    "Get Analysis"
+                  )}
+                </button>
+
+                {step >= questions.length - 1 && (
+                  <button
+                    onClick={() => {
+                      contactSpecialist();
+                      saveResponse();
+                    }}
+                    className="w-full bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-lg font-medium transition-all"
+                  >
+                    Contact Specialist ↗
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />
