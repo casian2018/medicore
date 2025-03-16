@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { FaArrowUp, FaArrowDown, FaComment, FaBars, FaTimes } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaComment, FaBars, FaTimes, FaPlus } from "react-icons/fa";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
 
@@ -24,27 +24,18 @@ const Forum = () => {
         { _id: string; title: string; content: string; profilePic: string }[]
     >([]);
     const [loading, setLoading] = useState(false);
-    const [userType, setUserType] = useState<string | null>(null);
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
     useEffect(() => {
-        fetch('/api/profile/user')
-            .then((res) => res.json())
-            .then((data) => {
-                setUserType(data.type);
-            });
-    }, []);
-
-    useEffect(() => {
-        if (selectedTag && userType === 'doctor') {
+        if (selectedTag) {
             setLoading(true);
             setTimeout(() => {
                 fetch(`/api/forum/posts?tag=${selectedTag}`)
                     .then((res) => res.json())
                     .then((data) => {
                         setPosts(
-                            data.map((post: any, index: number) => ({
+                            data.map((post, index) => ({
                                 ...post,
                                 profilePic: `https://i.pravatar.cc/150?img=${index + 1}`,
                             }))
@@ -53,36 +44,23 @@ const Forum = () => {
                     });
             }, 500);
         }
-    }, [selectedTag, userType]);
-
-    if (userType !== 'doctor') {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
-                <p className="text-gray-700 mb-4">You do not have permission to access this forum.</p>
-                <button
-                    onClick={() => router.push('/')}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md"
-                >
-                    Go Back
-                </button>
-            </div>
-        );
-    }
+    }, [selectedTag]);
 
     return (
         <>
             <Nav />
-            <div className="flex flex-col min-h-screen bg-white ">
+            <div className="flex flex-col min-h-screen bg-white">
+                {/* Mobile Menu Button */}
                 <button
                     onClick={toggleSidebar}
-                    className="lg:hidden fixed mt-2 right-4 top-20  z-50 p-2 rounded-full bg-red-600 text-white shadow-lg"
+                    className="lg:hidden fixed top-20 left-4 z-50 p-3 rounded-full bg-red-600 text-white shadow-lg hover:bg-red-700 transition-all"
                     aria-label="Toggle navigation"
                 >
                     {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
                 </button>
 
                 <div className="flex flex-1 overflow-hidden pt-8">
+                    {/* Sidebar Backdrop */}
                     {isSidebarOpen && (
                         <div
                             className="fixed inset-0 z-30 bg-black/50 lg:hidden"
@@ -91,18 +69,20 @@ const Forum = () => {
                         />
                     )}
 
-                    <div className={`lg:w-64 w-64 fixed lg:relative h-full lg:h-auto z-40 bg-gray-50 shadow-sm overflow-y-auto transform transition-transform duration-300 ease-in-out mt-13 
+                    {/* Sidebar */}
+                    <div className={`lg:w-72 w-64 fixed lg:relative h-full lg:h-auto z-40 bg-white shadow-xl overflow-y-auto transform transition-transform duration-300 ease-in-out mt-13 
                         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
                     >
-                        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-                            <h2 className="font-medium text-gray-600 uppercase text-xs">Medical Topics</h2>
+                        <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                            <h2 className="font-semibold text-gray-800 text-lg">Medical Topics</h2>
                             <FaTimes 
-                                className="lg:hidden cursor-pointer text-gray-500"
+                                className="lg:hidden cursor-pointer text-gray-500 hover:text-gray-700 transition-colors"
                                 onClick={toggleSidebar}
+                                size={18}
                             />
                         </div>
-                        <div className="py-2">
-                            {tags.map((tag: string) => (
+                        <div className="py-4 px-2">
+                            {tags.map((tag) => (
                                 <div
                                     key={tag}
                                     role="button"
@@ -111,33 +91,48 @@ const Forum = () => {
                                         setSelectedTag(tag);
                                         setIsSidebarOpen(false);
                                     }}
-                                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => e.key === "Enter" && setSelectedTag(tag)}
-                                    className={`px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors rounded-md my-1 mx-2 ${
+                                    onKeyDown={(e) => e.key === "Enter" && setSelectedTag(tag)}
+                                    className={`px-4 py-3 cursor-pointer hover:bg-red-50 transition-all rounded-lg my-1 mx-2 ${
                                         selectedTag === tag
-                                            ? "bg-blue-50 border-l-4 border-red-600 font-medium text-gray-900"
-                                            : "text-gray-700"
+                                            ? "bg-red-600 text-white hover:bg-red-700 shadow-md"
+                                            : "text-gray-700 hover:bg-gray-50"
                                     }`}
                                     aria-selected={selectedTag === tag}
                                     aria-label={`Select ${tag} category`}
                                 >
                                     <div className="flex items-center">
-                                        <span className="h-6 w-6 rounded-full bg-red-600 mr-3 flex-shrink-0"></span>
-                                        {tag}
+                                        <span className={`h-2 w-2 rounded-full mr-3 ${selectedTag === tag ? 'bg-white' : 'bg-red-600'}`}></span>
+                                        <span className="font-medium">{tag}</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-4 bg-gray-100 lg:ml-0 mt-8 lg:mt-0">
+                    {/* Main content area */}
+                    <div className="flex-1 overflow-y-auto p-4 lg:p-6 bg-gray-50 lg:ml-0 mt-8 lg:mt-0">
                         <div className="max-w-3xl mx-auto pt-12">
-                            <div className="bg-gray-50 rounded-lg shadow-sm p-4 mb-5 flex items-center">
-                                <div className="h-10 w-10 rounded-full bg-red-600 mr-4 flex-shrink-0"></div>
+                            <div className="bg-white rounded-xl shadow-sm p-6 mb-6 flex items-center border border-gray-100">
+                                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-red-600 to-red-700 mr-4 flex-shrink-0 flex items-center justify-center">
+                                    <span className="text-white font-bold text-xl">{selectedTag[0]}</span>
+                                </div>
                                 <div>
-                                    <h2 className="text-xl font-bold text-gray-900">{selectedTag}</h2>
-                                    <p className="text-sm text-gray-600">Medical discussions and resources</p>
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-1">{selectedTag}</h2>
+                                    <p className="text-sm text-gray-600">Join the discussion about {selectedTag.toLowerCase()} medicine</p>
                                 </div>
                             </div>
+
+                            {/* Create Post Button */}
+                            <div className="fixed bottom-8 right-8 z-30">
+                                <button 
+                                    onClick={() => router.push('/forum/addPost')}
+                                    className="bg-red-600 text-white font-semibold px-6 py-4 rounded-full text-sm hover:bg-red-700 transition-all shadow-lg flex items-center hover:shadow-xl"
+                                >
+                                    <FaPlus className="mr-2" />
+                                    <span className="hidden lg:inline">Create Post</span>
+                                </button>
+                            </div>
+
                             {loading ? (
                                 <div className="flex justify-center my-12 flex-col items-center">
                                     <div className="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -145,23 +140,72 @@ const Forum = () => {
                                 </div>
                             ) : posts.length > 0 ? (
                                 <div className="space-y-4 pb-16">
-                                    {posts.map((post: { _id: string; title: string; content: string; profilePic: string }) => (
+                                    {posts.map((post) => (
                                         <div
                                             key={post._id}
-                                            className="bg-gray-50 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md"
+                                            className="bg-white rounded-xl shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer group border border-gray-100"
                                             onClick={() => router.push(`/forum/page/${post._id}`)}
                                             role="button"
                                             tabIndex={0}
+                                            onKeyDown={(e) => e.key === "Enter" && router.push(`/forum/page/${post._id}`)}
                                         >
                                             <div className="flex p-4">
-                                                <h3 className="text-lg font-medium mb-2 text-gray-900">{post.title}</h3>
+                                                {/* Voting buttons */}
+                                                <div className="flex flex-col items-center mr-4">
+                                                    <button
+                                                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                        aria-label="Upvote post"
+                                                    >
+                                                        <FaArrowUp size={18} />
+                                                    </button>
+                                                    <span className="text-sm font-medium my-1 text-center text-gray-700">0</span>
+                                                    <button
+                                                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                        aria-label="Downvote post"
+                                                    >
+                                                        <FaArrowDown size={18} />
+                                                    </button>
+                                                </div>
+
+                                                {/* Post content */}
+                                                <div className="flex-1">
+                                                    <div className="flex items-center mb-3">
+                                                        <img
+                                                            src={post.profilePic}
+                                                            alt="User Profile"
+                                                            className="h-8 w-8 rounded-full object-cover mr-3 flex-shrink-0"
+                                                        />
+                                                        <span className="text-sm text-gray-600">
+                                                            Posted by <span className="text-gray-900 font-medium hover:underline">Anonymous</span> • 1h
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{post.title}</h3>
+                                                    <div className="text-gray-700 mb-3 leading-relaxed">
+                                                        {post.content.length > 250 ? 
+                                                            post.content.substring(0, 250) + "..." : 
+                                                            post.content}
+                                                    </div>
+                                                    <div className="flex items-center text-gray-600 text-sm">
+                                                        <div className="flex items-center mr-4 hover:bg-gray-100 px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
+                                                            <FaComment className="mr-2 text-red-600" />
+                                                            <span>0 Comments</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="bg-gray-50 rounded-md shadow p-8 text-center">
-                                    <p className="text-gray-600">No posts found for this topic</p>
+                                <div className="bg-white rounded-xl shadow p-8 text-center border border-gray-100">
+                                    <div className="text-6xl text-red-600 mb-4">💬</div>
+                                    <p className="text-gray-700 text-lg mb-4">No discussions found in {selectedTag}</p>
+                                    <button
+                                        onClick={() => router.push("/forum/addPost")}
+                                        className="bg-red-600 text-white font-medium px-6 py-3 rounded-lg text-sm hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
+                                    >
+                                        Start the conversation
+                                    </button>
                                 </div>
                             )}
                         </div>
