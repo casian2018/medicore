@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Nav from "@/components/nav";
-import Footer from "@/components/footer"
+import Nav from '@/components/nav'
+import Footer from '@/components/footer'
 
 export default function Chat() {
   const [message, setMessage] = useState<string>("");
@@ -83,44 +83,83 @@ export default function Chat() {
     router.push("/talk/video");
   };
 
+    const data = await res.json();
+    setResponse(data.reply || "Error: Unable to get a response.");
+    setLoading(false);
+  };
+
+  const contactSpecialist = () => {
+    router.push("/talk/video");
+  };
+
   return (
-    <>
-    <Nav />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-white text-black p-6 pt-24">
-        <div className="w-full max-w-lg p-4 bg-gray-100 rounded-lg shadow-md">
-          {response || questions[step]}
-          <textarea
-        className="w-full p-2 rounded-md bg-white text-black border border-gray-300 focus:outline-none"
-        rows={3}
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your response..."
-          />
-          <button
-        onClick={sendMessage}
-        disabled={loading}
-        className="mt-3 w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-md transition disabled:bg-gray-500"
-          >
-        {loading
-          ? "Thinking..."
-          : step < questions.length - 1
-          ? "Next"
-          : "Send"}
-          </button>
-          {step >= questions.length - 1 && (
-        <button
-          onClick={() => {
-            contactSpecialist();
-            saveResponse();
-          }}
-          className="mt-3 w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-md transition"
-        >
-          Contact Specialist
-        </button>
-          )}
+    <div>
+      <Nav />
+      <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
+        <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg flex flex-col justify-evenly h-2xl mt-25">
+        
+          <div className="p-4 border-b border-gray-200 bg-white rounded-t-xl">
+            <h1 className="text-xl font-semibold text-gray-800">Medical Assistant</h1>
+            <p className="text-sm text-gray-600">Let's assess your symptoms</p>
+          </div>
+
+     
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+ 
+            <div className="flex items-start gap-3">
+              <div className="bg-red-200 p-3 rounded-2xl max-w-[70%]">
+                <p className="text-gray-800 text-sm">{response || questions[step]}</p>
+              </div>
+            </div>
+
+         
+            <div className="border-t border-gray-100 pt-4">
+              <textarea
+                className="w-full p-3 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none"
+                rows={3}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message here..."
+              />
+          
+              <div className="mt-3 flex justify-evenly items-center gap-3">
+                <button
+                  onClick={sendMessage}
+                  disabled={loading}
+                  className="flex-1 bg-red-600 hover:bg-red-500 text-white py-3 px-6 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
+                      Analyzing...
+                    </span>
+                  ) : step < questions.length - 1 ? "Next Question →" : "Get Diagnosis"}
+                </button>
+
+                {step <= questions.length && (
+                  <button
+                    onClick={() => {
+                      contactSpecialist();
+                      saveResponse();
+                    }}
+                    className="flex-1 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer text-center"
+                  >
+                    Contact Specialist
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Status Bar */}
+          <div className="p-3 border-t border-gray-100 bg-gray-50 rounded-b-xl">
+            <p className="text-xs text-gray-500 text-center">
+              {step + 1} of {questions.length} questions answered
+            </p>
+          </div>
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

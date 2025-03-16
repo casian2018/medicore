@@ -85,20 +85,6 @@ export default function ForumPage() {
                     </div>
                     <h1 className="text-2xl font-bold text-gray-900">{post.title}</h1>
                     <p className="text-gray-700 mt-2">{post.content}</p>
-                    <div className="flex space-x-6 mt-4 text-gray-600">
-                        <button className="flex items-center space-x-1 hover:text-red-600">
-                            <span>⬆️ 20K</span>
-                        </button>
-                        <button className="flex items-center space-x-1 hover:text-red-600">
-                            <span>💬 {post.responses.length}</span>
-                        </button>
-                        <button className="flex items-center space-x-1 hover:text-red-600">
-                            <span>⭐ 1</span>
-                        </button>
-                        <button className="flex items-center space-x-1 hover:text-red-600">
-                            <span>🔗 Share</span>
-                        </button>
-                    </div>
                     <h2 className="mt-6 text-lg font-semibold text-gray-900">Responses</h2>
                     <div className="mt-4 space-y-4">
                         {post.responses.map((response, index) => (
