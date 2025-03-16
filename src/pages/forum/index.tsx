@@ -13,7 +13,7 @@ interface Post {
 }
 
 const Forum = () => {
-    const router = useRouter(); 
+    const router = useRouter();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [tags] = useState([
         "Neuro",
@@ -41,7 +41,7 @@ const Forum = () => {
                     .then((res) => res.json())
                     .then((data) => {
                         setPosts(
-                            data.map((post, index) => ({
+                            data.map((post: any, index: number) => ({
                                 ...post,
                                 profilePic: `https://i.pravatar.cc/150?img=${index + 1}`,
                             }))
@@ -81,7 +81,7 @@ const Forum = () => {
                     >
                         <div className="p-6 border-b border-gray-100 flex justify-between items-center">
                             <h2 className="font-semibold text-gray-800 text-lg">Medical Topics</h2>
-                            <FaTimes 
+                            <FaTimes
                                 className="lg:hidden cursor-pointer text-gray-500 hover:text-gray-700 transition-colors"
                                 onClick={toggleSidebar}
                                 size={18}
@@ -98,11 +98,10 @@ const Forum = () => {
                                         setIsSidebarOpen(false);
                                     }}
                                     onKeyDown={(e) => e.key === "Enter" && setSelectedTag(tag)}
-                                    className={`px-4 py-3 cursor-pointer hover:bg-red-50 transition-all rounded-lg my-1 mx-2 ${
-                                        selectedTag === tag
+                                    className={`px-4 py-3 cursor-pointer hover:bg-red-50 transition-all rounded-lg my-1 mx-2 ${selectedTag === tag
                                             ? "bg-red-600 text-white hover:bg-red-700 shadow-md"
                                             : "text-gray-700 hover:bg-gray-50"
-                                    }`}
+                                        }`}
                                     aria-selected={selectedTag === tag}
                                     aria-label={`Select ${tag} category`}
                                 >
@@ -130,7 +129,7 @@ const Forum = () => {
 
                             {/* Create Post Button */}
                             <div className="fixed bottom-8 right-8 z-30">
-                                <button 
+                                <button
                                     onClick={() => router.push('/forum/addPost')}
                                     className="bg-red-600 text-white font-semibold px-6 py-4 rounded-full text-sm hover:bg-red-700 transition-all shadow-lg flex items-center hover:shadow-xl"
                                 >
@@ -146,62 +145,62 @@ const Forum = () => {
                                 </div>
                             ) : posts.length > 0 ? (
                                 <div className="space-y-4 pb-16">
-                                     {posts.map((post) => (
-        <div
-            key={post._id}
-            className="bg-white rounded-xl shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer group border border-gray-100"
-            onClick={() => router.push(`/forum/page/${post._id}`)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && router.push(`/forum/page/${post._id}`)}
-        >
-            <div className="flex p-4">
-                {/* Voting buttons */}
-                <div className="flex flex-col items-center mr-4">
-                    <button
-                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        aria-label="Upvote post"
-                    >
-                        <FaArrowUp size={18} />
-                    </button>
-                    <span className="text-sm font-medium my-1 text-center text-gray-700">0</span>
-                    <button
-                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                        aria-label="Downvote post"
-                    >
-                        <FaArrowDown size={18} />
-                    </button>
-                </div>
+                                    {posts.map((post) => (
+                                        <div
+                                            key={post._id}
+                                            className="bg-white rounded-xl shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer group border border-gray-100"
+                                            onClick={() => router.push(`/forum/page/${post._id}`)}
+                                            role="button"
+                                            tabIndex={0}
+                                            onKeyDown={(e) => e.key === "Enter" && router.push(`/forum/page/${post._id}`)}
+                                        >
+                                            <div className="flex p-4">
+                                                {/* Voting buttons */}
+                                                <div className="flex flex-col items-center mr-4">
+                                                    <button
+                                                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                        aria-label="Upvote post"
+                                                    >
+                                                        <FaArrowUp size={18} />
+                                                    </button>
+                                                    <span className="text-sm font-medium my-1 text-center text-gray-700">0</span>
+                                                    <button
+                                                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                        aria-label="Downvote post"
+                                                    >
+                                                        <FaArrowDown size={18} />
+                                                    </button>
+                                                </div>
 
-                {/* Post content */}
-                <div className="flex-1">
-                    <div className="flex items-center mb-3">
-                        <img
-                            src={post.profilePic}
-                            alt="User Profile"
-                            className="h-8 w-8 rounded-full object-cover mr-3 flex-shrink-0"
-                        />
-                        <span className="text-sm text-gray-600">
-                            Posted by <span className="text-gray-900 font-medium hover:underline">Anonymous</span> • 1h
-                        </span>
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{post.title}</h3>
-                    <div className="text-gray-700 mb-3 leading-relaxed">
-                        {post.content.length > 250 ? 
-                            post.content.substring(0, 250) + "..." : 
-                            post.content}
-                    </div>
-                    <div className="flex items-center text-gray-600 text-sm">
-                        <div className="flex items-center mr-4 hover:bg-gray-100 px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
-                            <FaComment className="mr-2 text-red-600" />
-                            {/* Updated comment count display */}
-                            <span>{post.responses.length} Comments</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    ))}
+                                                {/* Post content */}
+                                                <div className="flex-1">
+                                                    <div className="flex items-center mb-3">
+                                                        <img
+                                                            src={post.profilePic}
+                                                            alt="User Profile"
+                                                            className="h-8 w-8 rounded-full object-cover mr-3 flex-shrink-0"
+                                                        />
+                                                        <span className="text-sm text-gray-600">
+                                                            Posted by <span className="text-gray-900 font-medium hover:underline">Anonymous</span> • 1h
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{post.title}</h3>
+                                                    <div className="text-gray-700 mb-3 leading-relaxed">
+                                                        {post.content.length > 250 ?
+                                                            post.content.substring(0, 250) + "..." :
+                                                            post.content}
+                                                    </div>
+                                                    <div className="flex items-center text-gray-600 text-sm">
+                                                        <div className="flex items-center mr-4 hover:bg-gray-100 px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
+                                                            <FaComment className="mr-2 text-red-600" />
+                                                            {/* Updated comment count display */}
+                                                            <span>{post.responses.length} Comments</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             ) : (
                                 <div className="bg-white rounded-xl shadow p-8 text-center border border-gray-100">
@@ -225,3 +224,4 @@ const Forum = () => {
 };
 
 export default Forum;
+
