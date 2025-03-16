@@ -95,7 +95,7 @@ export default function Chat() {
 
           <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
             {/* Chat History */}
-            <div className="min-h-[200px] max-h-[70vh] overflow-y-auto ...">
+            <div className="min-h-[10px] max-h-[70vh] overflow-y-auto ...">
               {chatHistory.map((chat, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex justify-start">
