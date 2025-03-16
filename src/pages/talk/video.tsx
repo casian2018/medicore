@@ -6,7 +6,7 @@ import Footer from '@/components/footer'
 const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID as string;
 const CHANNEL_NAME = "main";
 const UID = Math.floor(Math.random() * 10000);
-const PLACEHOLDER_IMAGE_URL = "/hero1.jpg";
+const PLACEHOLDER_IMAGE_URL = "/camera-off.jpg";
 
 export default function Video(): JSX.Element {
 
