@@ -15,7 +15,7 @@ const Logout = () => {
                 });
 
                 if (response.ok) {
-                    router.push('/login');
+                    router.push('/pages/login');
                 } else {
                     console.error('Failed to logout');
                 }

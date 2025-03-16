@@ -34,6 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const response = result.response;
     const text = formatResponse(response.text());
 
+    console.log(prompt)
+
     res.status(200).json({ reply: text });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
