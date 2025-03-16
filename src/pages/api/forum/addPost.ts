@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             images: image ? [{ name: image }] : [], // Ensure images field is always an array
             responses: [], // Initialize with an empty array for responses
             timestamp: new Date(),
-            tags: []
+            tags: tags
         }
 
         try {

@@ -76,6 +76,8 @@ export default function DoctorForum() {
 			image: newPost.image || "", // Send image name or empty string
 		};
 
+    // console.log(tempPost)
+
 		// Send data to API
 		try {
 			const response = await fetch("/api/forum/addPost", {
