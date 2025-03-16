@@ -1,0 +1,6 @@
+framework module Pods_MediCore {
+  umbrella header "Pods-MediCore-umbrella.h"
+
+  export *
+  module * { export * }
+}
